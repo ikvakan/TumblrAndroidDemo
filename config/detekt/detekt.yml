@@ -1,0 +1,36 @@
+#
+# Customizing some rules for Compose
+# see: https://detekt.dev/docs/introduction/compose
+#
+# If using detekt plugin, then plugin needs to be configured
+# with this file and "Enable rules upon default configuration"
+# should be checked.
+#
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: [ 'Composable' ]
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9]*'
+
+
+complexity:
+  LongMethod:
+    threshold: 200
+  LongParameterList:
+    functionThreshold: 100
+    constructorThreshold: 10
+  TooManyFunctions:
+    active: true
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**' ]
+    thresholdInFiles: 15
+    thresholdInClasses: 15
+    thresholdInInterfaces: 15
+    thresholdInObjects: 15
+
+style:
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  UnusedPrivateMember:
+    ignoreAnnotated: [ 'Preview' ]
