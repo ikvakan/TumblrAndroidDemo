@@ -6,4 +6,7 @@ object DependencyVersions {
     const val RETROFIT = "2.9.0"
     const val ROOM = "2.5.0"
     const val DETEKT = "1.23.1"
+    const val NAVIGATION_COMPOSE = "2.7.3"
+    const val KOIN = "3.4.0"
+    const val TIMBER = "5.0.1"
 }
