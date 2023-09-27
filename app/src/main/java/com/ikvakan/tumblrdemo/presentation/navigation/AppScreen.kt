@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.presentation
+package com.ikvakan.tumblrdemo.presentation.navigation
 
 sealed class AppScreen {
     abstract val route: String

@@ -9,6 +9,10 @@ android {
     namespace = "com.ikvakan.tumblrdemo"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.ikvakan.tumblrdemo"
         minSdk = 24
@@ -20,15 +24,22 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("boolean", "LOGS", "true")
+        buildConfigField("String", "API_BASE_URL", "\"https://api.tumblr.com/v2/\"")
+        buildConfigField("String", "API_KEY", "\"T2YmdelBBaOusf3Hyvm8o54YDSjOnoHiFcLCEdcJ4PtVW3u1zY\"")
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            var removeLogs = true
+            if (removeLogs) {
+                buildConfigField("boolean", "LOGS", "false")
+            }
         }
     }
     compileOptions {

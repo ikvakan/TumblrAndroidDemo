@@ -3,7 +3,7 @@ package com.ikvakan.tumblrdemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.ikvakan.tumblrdemo.presentation.AppContent
+import com.ikvakan.tumblrdemo.presentation.navigation.AppContent
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

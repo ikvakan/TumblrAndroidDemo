@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.presentation
+package com.ikvakan.tumblrdemo.presentation.navigation
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -10,10 +10,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ikvakan.tumblrdemo.presentation.screens.PostsScreen
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
+import timber.log.Timber
+
+typealias Navigate = (screen: AppScreen) -> Unit
+typealias OnBack = () -> Unit
 
 @Composable
 fun AppContent() {
     val navController = rememberNavController()
+    val onNavigate: Navigate = { scree ->
+        Timber.d("navigate to: ${scree.route}")
+        navController.navigate(scree.route) {
+            if (scree.clearBackstack) {
+                popUpTo(0)
+            }
+        }
+    }
+    val onBack: OnBack = { navController.popBackStack() }
 
     TumblrDemoTheme {
         NavHost(
@@ -27,6 +40,7 @@ fun AppContent() {
             composable(
                 route = AppScreen.PostsScreen.routDef,
             ) {
+                // view model extract
                 PostsScreen()
             }
         }
