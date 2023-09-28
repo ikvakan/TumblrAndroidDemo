@@ -1,7 +1,7 @@
-package com.ikvakan.tumblrdemo.data.remote.repository
+package com.ikvakan.tumblrdemo.domain.repository
 
 import com.ikvakan.tumblrdemo.domain.model.PostEntity
 
-interface PostRemoteRepository {
+interface PostRepository {
     suspend fun getPosts(): List<PostEntity>
 }

@@ -2,11 +2,12 @@ package com.ikvakan.tumblrdemo.di.remote
 
 import com.ikvakan.tumblrdemo.data.remote.repository.PostRemoteRepository
 import com.ikvakan.tumblrdemo.data.remote.repository.PostRemoteRepositoryImpl
-import com.ikvakan.tumblrdemo.domain.PostEntityMapper
+import com.ikvakan.tumblrdemo.domain.repository.PostRepository
+import com.ikvakan.tumblrdemo.domain.repository.PostRepositoryImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    single { PostEntityMapper() }
-    single<PostRemoteRepository> { PostRemoteRepositoryImpl(postService = get(), mapper = get()) }
+    single<PostRemoteRepository> { PostRemoteRepositoryImpl(postService = get()) }
+    single<PostRepository> { PostRepositoryImpl(remoteDataSource = get()) }
 }

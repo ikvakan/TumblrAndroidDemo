@@ -3,6 +3,8 @@ package com.ikvakan.tumblrdemo.di.network
 import com.ikvakan.tumblrdemo.BuildConfig
 import com.ikvakan.tumblrdemo.data.interceptors.ApiCallsInterceptor
 import com.ikvakan.tumblrdemo.data.remote.service.PostService
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
@@ -21,18 +23,25 @@ val networkModule = module {
         val loggingInterceptor = HttpLoggingInterceptor { message ->
             Timber.tag("HTTP").v(message)
         }
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
         OkHttpClient.Builder()
             .addNetworkInterceptor(loggingInterceptor)
             .addNetworkInterceptor(ApiCallsInterceptor(get(named("API_KEY"))))
             .build()
     }
+
+    single {
+        Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
+
     // Retrofit
     single {
         Retrofit.Builder()
             .client(get())
             .baseUrl(get<String>(named("API_BASE_URL")))
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(get()))
             .build()
     }
 

@@ -8,6 +8,7 @@ object Dependencies {
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${DependencyVersions.RETROFIT}"
     const val MOSHI_CONVERTER =
         "com.squareup.retrofit2:converter-moshi:${DependencyVersions.RETROFIT}"
+    const val MOSHI_KOTLIN ="com.squareup.moshi:moshi-kotlin:${DependencyVersions.MOSHI_KOTLIN}"
 
     const val ROOM_RUNTIME = "androidx.room:room-runtime:${DependencyVersions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${DependencyVersions.ROOM}"
@@ -43,9 +44,13 @@ fun DependencyHandler.room() {
 
 fun DependencyHandler.retrofit() {
     implementation(Dependencies.RETROFIT)
-    implementation(Dependencies.MOSHI_CONVERTER)
     implementation(Dependencies.OK_HTTP)
     implementation(Dependencies.OK_HTTP_LOGGING_INTERCEPTOR)
+    implementation(Dependencies.MOSHI_CONVERTER)
+
+}
+fun DependencyHandler.moshi(){
+    implementation(Dependencies.MOSHI_KOTLIN)
 }
 
 fun DependencyHandler.detekt() {

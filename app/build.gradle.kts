@@ -93,4 +93,5 @@ dependencies {
     detekt()
     room()
     retrofit()
+    moshi()
 }

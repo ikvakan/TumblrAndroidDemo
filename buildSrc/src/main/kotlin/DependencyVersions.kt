@@ -9,4 +9,5 @@ object DependencyVersions {
     const val NAVIGATION_COMPOSE = "2.7.3"
     const val KOIN = "3.4.0"
     const val TIMBER = "5.0.1"
+    const val MOSHI_KOTLIN = "1.14.0"
 }

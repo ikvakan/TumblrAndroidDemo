@@ -10,8 +10,8 @@ interface PostService {
     }
 
     @GET("blog/${BLOG_IDENTIFIER}/posts/")
-    fun getBlog(
-        @Query("limit") limit: Int = 10,
+    suspend fun getBlog(
+        @Query("limit") limit: Int = 5,
         @Query("type") type: String = "photo"
     ): TumblrRemoteDto
 }

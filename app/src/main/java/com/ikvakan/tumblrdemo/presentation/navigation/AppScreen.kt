@@ -22,4 +22,15 @@ sealed class AppScreen {
         override val route: String
             get() = routDef
     }
+    class FavoritesScreen : AppScreen() {
+        companion object {
+            const val routDef = "favoritesScreen"
+        }
+
+        init {
+            clearBackstack = true
+        }
+        override val route: String
+            get() = routDef
+    }
 }

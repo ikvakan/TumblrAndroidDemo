@@ -4,5 +4,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TumblrRemoteDto(
-    val responseRemoteDto: ResponseRemoteDto? = null
+    val response: ResponseRemoteDto
 )
