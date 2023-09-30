@@ -11,7 +11,7 @@ interface PostService {
 
     @GET("blog/${BLOG_IDENTIFIER}/posts/")
     suspend fun getBlog(
-        @Query("limit") limit: Int = 5,
+        @Query("limit") limit: Int = 20,
         @Query("type") type: String = "photo"
     ): TumblrRemoteDto
 }

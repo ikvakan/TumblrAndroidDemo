@@ -11,10 +11,9 @@ import kotlinx.coroutines.flow.update
 import timber.log.Timber
 
 data class PostsUiState(
-    val posts: List<PostEntity> = emptyList(),
+    val posts: List<PostEntity>? = null,
     val progress: Boolean = false,
-    val exception: Exception? = null,
-    val isFavorite: Boolean = false
+    val exception: Exception? = null
 ) {
     fun updateProgressState(progress: Boolean = false, exception: Exception? = null) = this.copy(
         progress = progress,
@@ -59,6 +58,20 @@ class PostsViewModel(private val postRepository: PostRepository) : BaseViewModel
             .onException { Timber.e(it) }
             .onFinish { Timber.d("finished") }
             .launch()
+    }
+
+    fun setFavoritePost(postId: Long?) {
+        _uiState.update {
+            it.copy(
+                posts = _uiState.value.posts?.map { post ->
+                    if (post.id == postId) {
+                        post.copy(isFavorite = !post.isFavorite)
+                    } else {
+                        post
+                    }
+                }
+            )
+        }
     }
 
     override fun onCleared() {

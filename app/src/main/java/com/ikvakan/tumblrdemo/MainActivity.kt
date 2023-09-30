@@ -8,6 +8,7 @@ import com.ikvakan.tumblrdemo.presentation.navigation.AppContent
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             AppContent()
         }

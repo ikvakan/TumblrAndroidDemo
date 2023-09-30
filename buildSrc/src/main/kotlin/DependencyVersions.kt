@@ -1,7 +1,4 @@
 object DependencyVersions {
-    const val COMPOSE = "1.4.3"
-    const val COMPOSE_MATERIAL_3 = "1.1.1"
-    const val COMPOSE_COMPILER = "1.4.6"
     const val OK_HTTP = "5.0.0-alpha.2"
     const val RETROFIT = "2.9.0"
     const val ROOM = "2.5.0"
@@ -10,4 +7,7 @@ object DependencyVersions {
     const val KOIN = "3.4.0"
     const val TIMBER = "5.0.1"
     const val MOSHI_KOTLIN = "1.14.0"
+    const val COMPOSE_BOM ="2023.09.00"
+    const val LIFECYCLE_RUNTIME_COMPOSE ="2.6.2"
+    const val GLIDE = "1.0.0-beta01"
 }

@@ -5,7 +5,7 @@ import java.math.BigInteger
 
 @JsonClass(generateAdapter = true)
 data class PostRemoteDto(
-  // val id: Int? = null,
+    val id: Long? = null,
     val summary: String = "",
     val photos: List<PhotoRemoteDto> = emptyList()
 )
