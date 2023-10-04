@@ -14,7 +14,9 @@ data class PostsUiState(
     val posts: List<PostEntity>? = null,
     val progress: Boolean = false,
     val exception: Exception? = null,
-    val selectedPost: PostEntity? = null
+    val selectedPost: PostEntity? = null,
+    val favoritePosts: List<PostEntity>? = null,
+    val isRefreshing: Boolean = false
 ) {
     fun updateProgressState(progress: Boolean = false, exception: Exception? = null) = this.copy(
         progress = progress,
@@ -43,7 +45,8 @@ class PostsViewModel(private val postRepository: PostRepository) :
             Timber.d("posts:$posts")
             _uiState.update {
                 it.copy(
-                    posts = posts
+                    posts = posts,
+                    isRefreshing = false
                 )
             }
         }
@@ -74,6 +77,15 @@ class PostsViewModel(private val postRepository: PostRepository) :
         }
     }
 
+    fun filterFavoritePosts() {
+        val favoritePosts = _uiState.value.posts?.filter { post -> post.isFavorite }
+        _uiState.update { state ->
+            state.copy(
+                favoritePosts = favoritePosts
+            )
+        }
+    }
+
     fun toggleIsFavoritePost(postId: Long?) {
         _uiState.update { state ->
             with(_uiState.value) {
@@ -89,12 +101,21 @@ class PostsViewModel(private val postRepository: PostRepository) :
                         this.selectedPost.copy(isFavorite = !this.selectedPost.isFavorite)
                     } else {
                         this.selectedPost
-                    }
+                    },
                 )
             }
         }
+        _uiState.update { state ->
+            state.copy(
+                favoritePosts = _uiState.value.posts?.filter { post -> post.isFavorite }
+            )
+        }
     }
 
+    fun onRefresh() {
+        _uiState.update { it.copy(isRefreshing = true) }
+        getPosts()
+    }
     override fun onCleared() {
         postsJob?.cancel()
         super.onCleared()

@@ -1,33 +1,32 @@
 package com.ikvakan.tumblrdemo.presentation.screens.posts
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
 import com.ikvakan.tumblrdemo.domain.model.PostEntity
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
-import com.ikvakan.tumblrdemo.presentation.screens.composables.AppCard
 import com.ikvakan.tumblrdemo.presentation.screens.composables.AppTopBar
 import com.ikvakan.tumblrdemo.presentation.screens.composables.NavigationIconType
+import com.ikvakan.tumblrdemo.presentation.screens.composables.PostListContent
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PostsScreen(
     drawerState: DrawerState,
     posts: List<PostEntity>?,
     onFavoriteClick: (postId: Long?) -> Unit,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onNavigate: Navigate
 ) {
     Scaffold(
@@ -40,15 +39,26 @@ fun PostsScreen(
         }
     ) { padding ->
         if (posts != null) {
-            LazyColumn(modifier = Modifier.padding(padding), content = {
-                items(posts) { post ->
-                    AppCard(
-                        post = post,
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                onRefresh = onRefresh,
+                indicator = { state, refreshTrigger ->
+                    SwipeRefreshIndicator(
+                        state = state,
+                        refreshTriggerDistance = refreshTrigger,
+                        scale = true,
+                        shape = CircleShape
+                    )
+                },
+                content = {
+                    PostListContent(
+                        posts = posts,
                         onFavoriteClick = onFavoriteClick,
+                        paddingValues = padding,
                         onNavigate = onNavigate
                     )
                 }
-            })
+            )
         }
     }
 }
@@ -61,6 +71,8 @@ fun PostsScreenPreview() {
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             posts = MockData().postEntities,
             onNavigate = {},
+            isRefreshing = false,
+            onRefresh = {},
             onFavoriteClick = {}
         )
     }

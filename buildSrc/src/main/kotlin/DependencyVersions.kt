@@ -10,4 +10,7 @@ object DependencyVersions {
     const val COMPOSE_BOM ="2023.09.00"
     const val LIFECYCLE_RUNTIME_COMPOSE ="2.6.2"
     const val GLIDE = "1.0.0-beta01"
+    const val MATERIAL_3 = "1.5.3"
+    const val SWIPE_REFRESH = "0.33.2-alpha"
+
 }

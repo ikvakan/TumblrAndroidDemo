@@ -24,7 +24,11 @@ object Dependencies {
     const val COMPOSE_UI = "androidx.compose.ui:ui"
     const val COMPOSE_UI_GRAPHICS = "androidx.compose.ui:ui-graphics"
     const val COMPOSE_UI_TOOLING_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
+   // const val COMPOSE_MATERIAL_3 = "androidx.compose.material:material:${DependencyVersions.MATERIAL_3}"
     const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3"
+
+    const val SWIPE_REFRESH = "com.google.accompanist:accompanist-swiperefresh:${DependencyVersions.SWIPE_REFRESH}"
+
     const val LIFECYCLE_RUNTIME_COMPOSE =
         "androidx.lifecycle:lifecycle-runtime-compose:${DependencyVersions.LIFECYCLE_RUNTIME_COMPOSE}"
 
@@ -45,6 +49,7 @@ fun DependencyHandler.compose() {
     implementation(Dependencies.COMPOSE_UI_GRAPHICS)
     implementation(Dependencies.COMPOSE_UI_TOOLING_PREVIEW)
     implementation(Dependencies.COMPOSE_MATERIAL_3)
+    implementation(Dependencies.SWIPE_REFRESH)
     implementation(Dependencies.LIFECYCLE_RUNTIME_COMPOSE)
 }
 

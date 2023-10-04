@@ -80,6 +80,8 @@ fun AppContent(
                             posts = uiState.posts,
                             drawerState = drawerState,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            isRefreshing = uiState.isRefreshing,
+                            onRefresh = { postsViewModel.onRefresh() },
                             onNavigate = onNavigate
                         )
                     }
@@ -104,7 +106,17 @@ fun AppContent(
                     }
                 }
                 composable(route = AppScreen.FavoritesScreen.route) {
-                    FavoritesScreen(drawerState = drawerState)
+                    BaseAppScreen(
+                        viewModel = postsViewModel,
+                        onNavigate = onNavigate
+                    ) {
+                        FavoritesScreen(
+                            posts = uiState.favoritePosts,
+                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            onNavigate = onNavigate,
+                            drawerState = drawerState
+                        )
+                    }
                 }
             }
         }

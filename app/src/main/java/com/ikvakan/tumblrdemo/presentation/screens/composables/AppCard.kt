@@ -32,6 +32,7 @@ import com.ikvakan.tumblrdemo.presentation.navigation.AppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun AppCard(
