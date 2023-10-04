@@ -1,7 +1,11 @@
 package com.ikvakan.tumblrdemo.presentation.navigation
 
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 sealed class AppScreen {
-    abstract val route: String
+    abstract val routeDef: String
     var clearBackstack = false
 
     fun isSame(other: AppScreen): Boolean {
@@ -9,28 +13,43 @@ sealed class AppScreen {
     }
 
     override fun toString(): String {
-        return "${javaClass.simpleName}(route='$route', clearBackstack = $clearBackstack)"
+        return "${javaClass.simpleName}(route='$routeDef', clearBackstack = $clearBackstack)"
     }
     class PostsScreen : AppScreen() {
         companion object {
-            const val routDef = "postsScreen"
+            const val route = "postsScreen"
         }
 
         init {
             clearBackstack = true
         }
-        override val route: String
-            get() = routDef
+        override val routeDef: String
+            get() = route
+    }
+    class PostDetailsScreen(private val postId: String) : AppScreen() {
+        companion object {
+            const val route = "postsDetailsScreen?postId={postId}"
+            val arguments = listOf(
+                navArgument("postId") {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+
+            fun getPostId(backStackEntry: NavBackStackEntry) = backStackEntry.arguments?.getString("postId")
+        }
+        override val routeDef: String
+            get() = "postsDetailsScreen?postId=$postId"
     }
     class FavoritesScreen : AppScreen() {
         companion object {
-            const val routDef = "favoritesScreen"
+            const val route = "favoritesScreen"
         }
 
         init {
             clearBackstack = true
         }
-        override val route: String
-            get() = routDef
+        override val routeDef: String
+            get() = route
     }
 }

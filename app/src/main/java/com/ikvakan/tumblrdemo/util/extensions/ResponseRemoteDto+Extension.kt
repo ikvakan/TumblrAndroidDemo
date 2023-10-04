@@ -11,5 +11,5 @@ fun ResponseRemoteDto.toPostEntityList(): List<PostEntity> {
             summary = e.summary,
             imageUrl = e.photos.firstOrNull()?.image?.url ?: ""
         )
-    }.toList()
+    }
 }

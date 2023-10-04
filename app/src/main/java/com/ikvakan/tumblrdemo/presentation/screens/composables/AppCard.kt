@@ -8,14 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +28,7 @@ import com.bumptech.glide.integration.compose.placeholder
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
 import com.ikvakan.tumblrdemo.domain.model.PostEntity
+import com.ikvakan.tumblrdemo.presentation.navigation.AppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
@@ -45,7 +41,7 @@ fun AppCard(
     onFavoriteClick: (postId: Long?) -> Unit
 ) {
     Card(
-        onClick = { },
+        onClick = { onNavigate(AppScreen.PostDetailsScreen(postId = post.id.toString())) },
         modifier = modifier
             .padding(dimensionResource(id = R.dimen.small_padding)),
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.default_elevation)),
@@ -58,11 +54,6 @@ fun AppCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            val favoriteIcon = if (post.isFavorite) {
-                Icons.Default.Favorite
-            } else {
-                Icons.Default.FavoriteBorder
-            }
             GlideImage(
                 model = post.imageUrl,
                 contentDescription = null,
@@ -87,14 +78,11 @@ fun AppCard(
                     maxLines = 2
                 )
             }
-            IconButton(onClick = { onFavoriteClick(post.id) }) {
-                Icon(
-                    imageVector = favoriteIcon,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.default_icon_size))
-                )
-            }
+            FavoriteIconButton(
+                onFavoriteClick = onFavoriteClick,
+                isFavorite = post.isFavorite,
+                postId = post.id
+            )
         }
     }
 }

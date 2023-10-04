@@ -1,6 +1,7 @@
 package com.ikvakan.tumblrdemo.presentation.screens.posts
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

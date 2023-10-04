@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">TumblrDemo</string>
     <string name="posts">Posts</string>
+    <string name="post_details">Posts Details</string>
     <string name="favorites">Favorites</string>
     <string name="blog_title">Blog:%1$s</string>
+    <string name="blog">Blog</string>
     <string name="post_summary">Summary:%1$s</string>
+    <string name="summary">Summary</string>
 </resources>

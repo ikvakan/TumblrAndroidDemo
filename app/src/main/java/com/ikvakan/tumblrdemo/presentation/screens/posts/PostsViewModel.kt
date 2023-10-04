@@ -13,7 +13,8 @@ import timber.log.Timber
 data class PostsUiState(
     val posts: List<PostEntity>? = null,
     val progress: Boolean = false,
-    val exception: Exception? = null
+    val exception: Exception? = null,
+    val selectedPost: PostEntity? = null
 ) {
     fun updateProgressState(progress: Boolean = false, exception: Exception? = null) = this.copy(
         progress = progress,
@@ -21,7 +22,8 @@ data class PostsUiState(
     )
 }
 
-class PostsViewModel(private val postRepository: PostRepository) : BaseViewModel() {
+class PostsViewModel(private val postRepository: PostRepository) :
+    BaseViewModel() {
 
     private val _uiState = MutableStateFlow(PostsUiState())
     val uiState = _uiState.asStateFlow()
@@ -60,22 +62,42 @@ class PostsViewModel(private val postRepository: PostRepository) : BaseViewModel
             .launch()
     }
 
-    fun setFavoritePost(postId: Long?) {
-        _uiState.update {
-            it.copy(
-                posts = _uiState.value.posts?.map { post ->
-                    if (post.id == postId) {
-                        post.copy(isFavorite = !post.isFavorite)
-                    } else {
-                        post
-                    }
-                }
+    fun setSelectedPost(postId: Long?) {
+        val selectedPost = _uiState.value.posts?.firstOrNull { post ->
+            post.id == postId
+        }
+        Timber.d("selected post:$selectedPost")
+        _uiState.update { state ->
+            state.copy(
+                selectedPost = selectedPost
             )
+        }
+    }
+
+    fun toggleIsFavoritePost(postId: Long?) {
+        _uiState.update { state ->
+            with(_uiState.value) {
+                state.copy(
+                    posts = this.posts?.map { post ->
+                        if (post.id == postId) {
+                            post.copy(isFavorite = !post.isFavorite)
+                        } else {
+                            post
+                        }
+                    },
+                    selectedPost = if (this.selectedPost != null) {
+                        this.selectedPost.copy(isFavorite = !this.selectedPost.isFavorite)
+                    } else {
+                        this.selectedPost
+                    }
+                )
+            }
         }
     }
 
     override fun onCleared() {
         postsJob?.cancel()
         super.onCleared()
+        Timber.d("onCleared:$this")
     }
 }

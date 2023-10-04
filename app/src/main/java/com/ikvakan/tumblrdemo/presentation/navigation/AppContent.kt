@@ -15,8 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ikvakan.tumblrdemo.core.BaseAppScreen
-import com.ikvakan.tumblrdemo.presentation.screens.drawer.AppDrawer
-import com.ikvakan.tumblrdemo.presentation.screens.favorites.FavoritesScreen
+import com.ikvakan.tumblrdemo.presentation.navigation.drawer.AppDrawer
+import com.ikvakan.tumblrdemo.presentation.screens.posts.FavoritesScreen
+import com.ikvakan.tumblrdemo.presentation.screens.posts.PostDetailsScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostsScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostsViewModel
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
@@ -28,12 +29,16 @@ typealias Navigate = (screen: AppScreen) -> Unit
 typealias OnBack = () -> Unit
 
 @Composable
-fun AppContent() {
+fun AppContent(
+    postsViewModel: PostsViewModel = getViewModel()
+) {
+    val uiState by postsViewModel.uiState.collectAsStateWithLifecycle()
+
     val navController = rememberNavController()
-    val onNavigate: Navigate = { scree ->
-        Timber.d("navigate to: ${scree.route}")
-        navController.navigate(scree.route) {
-            if (scree.clearBackstack) {
+    val onNavigate: Navigate = { screen ->
+        Timber.d("navigate to: ${screen.routeDef}")
+        navController.navigate(screen.routeDef) {
+            if (screen.clearBackstack) {
                 popUpTo(0)
             }
         }
@@ -43,7 +48,7 @@ fun AppContent() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentNavBackStackEntry?.destination?.route ?: AppScreen.PostsScreen.routDef
+    val currentRoute = currentNavBackStackEntry?.destination?.route ?: AppScreen.PostsScreen.route
 
     TumblrDemoTheme {
         AppDrawer(
@@ -56,33 +61,49 @@ fun AppContent() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = AppScreen.PostsScreen.routDef,
+                startDestination = AppScreen.PostsScreen.route,
                 enterTransition = { scaleIn(initialScale = 0.7f) + fadeIn() },
                 exitTransition = { scaleOut(targetScale = 1.3f) + fadeOut() },
                 popEnterTransition = { scaleIn(initialScale = 1.3f) + fadeIn() },
                 popExitTransition = { scaleOut(targetScale = 0.7f) + fadeOut() }
             ) {
                 composable(
-                    route = AppScreen.PostsScreen.routDef,
+                    route = AppScreen.PostsScreen.route,
                 ) {
-                    val postsViewModel: PostsViewModel = getViewModel()
-                    val uiState by postsViewModel.uiState.collectAsStateWithLifecycle()
                     BaseAppScreen(
                         viewModel = postsViewModel,
                         progress = uiState.progress,
-                        exception = uiState.exception,
-                        content =
-                        {
-                            PostsScreen(
-                                posts = uiState.posts,
-                                drawerState = drawerState,
-                                onFavoriteClick = { postId -> postsViewModel.setFavoritePost(postId) },
-                                onNavigate = onNavigate
-                            )
-                        }
-                    )
+                        onNavigate = onNavigate,
+                        exception = uiState.exception
+                    ) {
+                        PostsScreen(
+                            posts = uiState.posts,
+                            drawerState = drawerState,
+                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            onNavigate = onNavigate
+                        )
+                    }
                 }
-                composable(route = AppScreen.FavoritesScreen.routDef) {
+                composable(
+                    route = AppScreen.PostDetailsScreen.route,
+                    arguments = AppScreen.PostDetailsScreen.arguments
+                ) { backStackEntry ->
+                    val postId =
+                        AppScreen.PostDetailsScreen.getPostId(backStackEntry)?.toLongOrNull()
+                    postsViewModel.setSelectedPost(postId)
+
+                    BaseAppScreen(
+                        viewModel = postsViewModel,
+                        onNavigate = onNavigate
+                    ) {
+                        PostDetailsScreen(
+                            post = uiState.selectedPost,
+                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            onBack = onBack
+                        )
+                    }
+                }
+                composable(route = AppScreen.FavoritesScreen.route) {
                     FavoritesScreen(drawerState = drawerState)
                 }
             }

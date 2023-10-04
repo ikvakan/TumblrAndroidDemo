@@ -71,7 +71,6 @@ fun DependencyHandler.retrofit() {
     implementation(Dependencies.OK_HTTP)
     implementation(Dependencies.OK_HTTP_LOGGING_INTERCEPTOR)
     implementation(Dependencies.MOSHI_CONVERTER)
-
 }
 
 fun DependencyHandler.moshi() {

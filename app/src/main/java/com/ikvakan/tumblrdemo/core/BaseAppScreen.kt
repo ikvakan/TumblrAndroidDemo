@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import java.lang.Exception
@@ -17,6 +18,7 @@ fun BaseAppScreen(
     modifier: Modifier = Modifier,
     viewModel: BaseViewModel?,
     progress: Boolean = false,
+    onNavigate: Navigate,
     exception: Exception? = null,
     content: @Composable () -> Unit
 ) {
@@ -26,6 +28,7 @@ fun BaseAppScreen(
             viewModel.navigationFlow.collect { screen ->
                 if (screen != null) {
                     Timber.tag("NAVIGATION").v("navigateTo: $screen")
+                    onNavigate(screen)
                     viewModel.onNavigationHandled()
                 }
             }

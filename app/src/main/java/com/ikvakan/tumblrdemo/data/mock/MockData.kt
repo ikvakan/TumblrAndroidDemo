@@ -6,7 +6,7 @@ class MockData {
     val postEntities = List(size = 20) {
         PostEntity(
             id = it.toLong(),
-            blogTitle = "Marvel Blog:$it",
+            blogTitle = "Marvel Blog $it",
             summary = "Lorem ipsum dolor sit amet. Eos libero dolores ut voluptatem rerum " +
                 "ut atque libero id obcaecati veniam aut facere rerum? " +
                 "Id nobis earum rem nobis praesentium qui consequatur galisum eos autem illo. ",

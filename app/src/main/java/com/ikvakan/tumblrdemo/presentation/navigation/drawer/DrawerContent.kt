@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.presentation.screens.drawer
+package com.ikvakan.tumblrdemo.presentation.navigation.drawer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +40,7 @@ fun DrawerContent(
         ) {
             NavigationDrawerItem(
                 label = { Text(text = stringResource(id = R.string.posts)) },
-                selected = route == AppScreen.PostsScreen.routDef,
+                selected = route == AppScreen.PostsScreen.route,
                 onClick =
                 {
                     onNavigate.invoke(AppScreen.PostsScreen())
@@ -52,7 +52,7 @@ fun DrawerContent(
 
             NavigationDrawerItem(
                 label = { Text(text = stringResource(id = R.string.favorites)) },
-                selected = route == AppScreen.FavoritesScreen.routDef,
+                selected = route == AppScreen.FavoritesScreen.route,
                 onClick =
                 {
                     onNavigate.invoke(AppScreen.FavoritesScreen())
@@ -91,7 +91,7 @@ fun DrawerHeaderPreview() {
 fun DrawerContentPreview() {
     TumblrDemoTheme {
         DrawerContent(
-            route = AppScreen.PostsScreen.routDef,
+            route = AppScreen.PostsScreen.route,
             onNavigate = {},
             onClick = {}
         )

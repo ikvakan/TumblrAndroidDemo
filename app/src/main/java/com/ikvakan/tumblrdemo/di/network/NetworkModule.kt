@@ -29,7 +29,7 @@ val networkModule = module {
             .addNetworkInterceptor(ApiCallsInterceptor(get(named("API_KEY"))))
             .build()
     }
-
+    // Moshi
     single {
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
