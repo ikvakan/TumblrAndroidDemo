@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
-import com.ikvakan.tumblrdemo.domain.model.PostEntity
+import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.presentation.navigation.OnBack
 import com.ikvakan.tumblrdemo.presentation.screens.composables.AppTopBar
 import com.ikvakan.tumblrdemo.presentation.screens.composables.DetailsScreenContent
@@ -17,7 +17,7 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PostDetailsScreen(
-    post: PostEntity?,
+    post: Post?,
     onFavoriteClick: (Long?) -> Unit,
     onBack: OnBack
 ) {

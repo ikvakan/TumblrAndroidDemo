@@ -24,14 +24,14 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
-import com.ikvakan.tumblrdemo.domain.model.PostEntity
+import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun DetailsScreenContent(
     modifier: Modifier = Modifier,
-    post: PostEntity,
+    post: Post,
     paddingValues: PaddingValues,
     onFavoriteClick: (Long?) -> Unit,
     imageSize: Dp = dimensionResource(id = R.dimen.large_image_size),

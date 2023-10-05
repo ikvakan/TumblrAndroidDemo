@@ -8,12 +8,14 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.paging.compose.LazyPagingItems
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
-import com.ikvakan.tumblrdemo.domain.model.PostEntity
+import com.ikvakan.tumblrdemo.data.remote.model.PostRemoteDto
+import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
 import com.ikvakan.tumblrdemo.presentation.screens.composables.AppTopBar
 import com.ikvakan.tumblrdemo.presentation.screens.composables.NavigationIconType
@@ -23,10 +25,12 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 @Composable
 fun PostsScreen(
     drawerState: DrawerState,
-    posts: List<PostEntity>?,
+    posts: List<Post>?,
     onFavoriteClick: (postId: Long?) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
+    isLoadingMorePosts: Boolean,
+    onLoadMoreItems: () -> Unit,
     onNavigate: Navigate
 ) {
     Scaffold(
@@ -55,6 +59,8 @@ fun PostsScreen(
                         posts = posts,
                         onFavoriteClick = onFavoriteClick,
                         paddingValues = padding,
+                        onLoadMoreItems = onLoadMoreItems,
+                        isLoadingMorePosts = isLoadingMorePosts,
                         onNavigate = onNavigate
                     )
                 }
@@ -73,6 +79,8 @@ fun PostsScreenPreview() {
             onNavigate = {},
             isRefreshing = false,
             onRefresh = {},
+            isLoadingMorePosts = false,
+            onLoadMoreItems = {},
             onFavoriteClick = {}
         )
     }

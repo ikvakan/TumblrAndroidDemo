@@ -12,5 +12,7 @@ object DependencyVersions {
     const val GLIDE = "1.0.0-beta01"
     const val MATERIAL_3 = "1.5.3"
     const val SWIPE_REFRESH = "0.33.2-alpha"
+    const val PAGING_RUNTIME = "3.2.1"
+    const val PAGING_COMPOSE = "3.3.0-alpha02"
 
 }

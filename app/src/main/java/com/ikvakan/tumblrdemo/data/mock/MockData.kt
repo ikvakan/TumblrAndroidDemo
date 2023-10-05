@@ -1,10 +1,10 @@
 package com.ikvakan.tumblrdemo.data.mock
 
-import com.ikvakan.tumblrdemo.domain.model.PostEntity
+import com.ikvakan.tumblrdemo.domain.model.Post
 
 class MockData {
     val postEntities = List(size = 20) {
-        PostEntity(
+        Post(
             id = it.toLong(),
             blogTitle = "Marvel Blog $it",
             summary = "Lorem ipsum dolor sit amet. Eos libero dolores ut voluptatem rerum " +

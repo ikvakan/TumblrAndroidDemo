@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ikvakan.tumblrdemo.core.BaseAppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.drawer.AppDrawer
 import com.ikvakan.tumblrdemo.presentation.screens.posts.FavoritesScreen
@@ -76,12 +78,15 @@ fun AppContent(
                         onNavigate = onNavigate,
                         exception = uiState.exception
                     ) {
+
                         PostsScreen(
                             posts = uiState.posts,
+                            isLoadingMorePosts = uiState.isLoadingMorePosts,
                             drawerState = drawerState,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
                             isRefreshing = uiState.isRefreshing,
                             onRefresh = { postsViewModel.onRefresh() },
+                            onLoadMoreItems = { postsViewModel.getAdditionalItems() },
                             onNavigate = onNavigate
                         )
                     }

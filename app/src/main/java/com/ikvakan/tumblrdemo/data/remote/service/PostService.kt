@@ -6,12 +6,14 @@ import retrofit2.http.Query
 
 interface PostService {
     companion object {
-        private const val BLOG_IDENTIFIER = "marvelentertainment.tumblr.com"
+        const val BLOG_IDENTIFIER = "marvelentertainment.tumblr.com"
+        const val LIMIT = 10
     }
 
     @GET("blog/${BLOG_IDENTIFIER}/posts/")
-    suspend fun getBlog(
-        @Query("limit") limit: Int = 20,
+    suspend fun getPosts(
+        @Query("limit") limit: Int = LIMIT,
+        @Query("offset") offset: Int? = 0,
         @Query("type") type: String = "photo"
     ): TumblrRemoteDto
 }

@@ -37,6 +37,14 @@ object Dependencies {
     const val TIMBER = "com.jakewharton.timber:timber:${DependencyVersions.TIMBER}"
 
     const val GLIDE = "com.github.bumptech.glide:compose:${DependencyVersions.GLIDE}"
+
+    const val PAGING_RUNTIME= "androidx.paging:paging-runtime:${DependencyVersions.PAGING_RUNTIME}"
+    const val PAGING_COMPOSE= "androidx.paging:paging-compose:${DependencyVersions.PAGING_COMPOSE}"
+}
+
+fun DependencyHandler.paging(){
+    implementation(Dependencies.PAGING_RUNTIME)
+    implementation(Dependencies.PAGING_COMPOSE)
 }
 
 fun DependencyHandler.glide() {

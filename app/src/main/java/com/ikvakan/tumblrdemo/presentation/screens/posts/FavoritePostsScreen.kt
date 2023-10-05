@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
-import com.ikvakan.tumblrdemo.domain.model.PostEntity
+import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
 import com.ikvakan.tumblrdemo.presentation.screens.composables.AppTopBar
 import com.ikvakan.tumblrdemo.presentation.screens.composables.NavigationIconType
@@ -18,7 +18,7 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable
 fun FavoritesScreen(
-    posts: List<PostEntity>?,
+    posts: List<Post>?,
     onFavoriteClick: (Long?) -> Unit,
     onNavigate: Navigate,
     drawerState: DrawerState

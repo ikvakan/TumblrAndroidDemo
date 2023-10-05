@@ -5,5 +5,5 @@ import androidx.lifecycle.viewModelScope
 import com.ikvakan.tumblrdemo.util.Coroutine
 import kotlinx.coroutines.CoroutineScope
 
-fun ViewModel.coroutine(block: suspend CoroutineScope.() -> Unit): Coroutine =
+fun ViewModel.coroutine(block: suspend CoroutineScope.() -> Unit) =
     Coroutine(this.viewModelScope, block)

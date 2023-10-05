@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id(PluginNamespace.ANDROID_APPLICATION)
     id(PluginNamespace.ANDROID_KOTLIN)
@@ -26,7 +29,11 @@ android {
         }
         buildConfigField("boolean", "LOGS", "true")
         buildConfigField("String", "API_BASE_URL", "\"https://api.tumblr.com/v2/\"")
-        buildConfigField("String", "API_KEY", "\"T2YmdelBBaOusf3Hyvm8o54YDSjOnoHiFcLCEdcJ4PtVW3u1zY\"")
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"${getProperty("local.properties","api_key") ?: ""}\""
+        )
     }
 
     buildTypes {
@@ -81,6 +88,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    paging()
     glide()
     compose()
     timber()
@@ -90,4 +98,17 @@ dependencies {
     room()
     retrofit()
     moshi()
+}
+
+fun getProperty(filename: String, propName: String): String? {
+    val propsFile = rootProject.file(filename)
+
+    return if (propsFile.exists()) {
+        val props = Properties()
+        props.load(FileInputStream(propsFile))
+        props.getProperty(propName)
+    } else {
+        println("$filename does not exist!")
+        null
+    }
 }

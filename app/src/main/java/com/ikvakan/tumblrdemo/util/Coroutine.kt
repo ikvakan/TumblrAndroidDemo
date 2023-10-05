@@ -10,8 +10,9 @@ import kotlin.coroutines.EmptyCoroutineContext
 typealias ProgressChangedCallback = (Coroutine.Progress) -> Unit
 typealias StartedCallBack = () -> Unit
 typealias ExceptionCallBack = (Exception) -> Unit
-typealias CancelCallBack = () -> Unit
+typealias CancelCallBack = (Exception) -> Unit
 typealias FinishedCallBack = () -> Unit
+typealias OnCompleteCallBack = () -> Unit
 
 class Coroutine(
     private val coroutineScope: CoroutineScope,
@@ -28,6 +29,7 @@ class Coroutine(
     private var exceptionCallback: ExceptionCallBack? = null
     private var cancelCallback: CancelCallBack? = null
     private var finishedCallback: FinishedCallBack? = null
+    private var onCompleteCallBack : OnCompleteCallBack? = null
     private var coroutineContext: CoroutineContext = EmptyCoroutineContext
     private var coroutineStart: CoroutineStart = CoroutineStart.DEFAULT
 
@@ -38,6 +40,7 @@ class Coroutine(
     fun onException(callback: ExceptionCallBack) = apply { exceptionCallback = callback }
     fun onCanceled(callback: CancelCallBack) = apply { cancelCallback = callback }
     fun onFinish(callback: FinishedCallBack) = apply { finishedCallback = callback }
+    fun onComplete(callback: FinishedCallBack) = apply { finishedCallback = callback }
 
     fun withContext(context: CoroutineContext) = apply { coroutineContext = context }
     fun setStart(start: CoroutineStart) = apply { coroutineStart = start }
@@ -51,11 +54,14 @@ class Coroutine(
             updateProgress(inProgress = false)
             finishedCallback?.invoke()
         } catch (e: CancellationException) {
-            cancelCallback?.invoke()
+            cancelCallback?.invoke(e)
             updateProgress(inProgress = false)
         } catch (e: Exception) {
             updateProgress(inProgress = false, exception = e)
             exceptionCallback?.invoke(e)
+        } finally {
+            updateProgress(inProgress = false)
+            onCompleteCallBack?.invoke()
         }
     }
 

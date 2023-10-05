@@ -27,17 +27,16 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
-import com.ikvakan.tumblrdemo.domain.model.PostEntity
+import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.presentation.navigation.AppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
-
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
-    post: PostEntity,
+    post: Post,
     onNavigate: Navigate,
     onFavoriteClick: (postId: Long?) -> Unit
 ) {
@@ -94,8 +93,7 @@ fun AppCardPreview() {
     TumblrDemoTheme {
         AppCard(
             post = MockData().postEntities[0],
-            onNavigate = {},
-            onFavoriteClick = {}
-        )
+            onNavigate = {}
+        ) {}
     }
 }

@@ -1,6 +1,6 @@
 package com.ikvakan.tumblrdemo.domain.model
 
-data class PostEntity(
+data class Post(
     val id: Long? = null,
     val blogTitle: String = "",
     val summary: String = "",
