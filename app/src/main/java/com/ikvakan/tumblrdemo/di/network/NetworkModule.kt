@@ -1,7 +1,7 @@
 package com.ikvakan.tumblrdemo.di.network
 
 import com.ikvakan.tumblrdemo.BuildConfig
-import com.ikvakan.tumblrdemo.data.interceptors.ApiCallsInterceptor
+import com.ikvakan.tumblrdemo.data.interceptor.ApiCallsInterceptor
 import com.ikvakan.tumblrdemo.data.remote.service.PostService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

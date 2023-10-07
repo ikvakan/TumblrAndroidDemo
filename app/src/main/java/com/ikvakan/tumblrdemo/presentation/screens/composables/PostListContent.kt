@@ -42,7 +42,6 @@ fun PostListContent(
     if (posts.isNotEmpty() && (firsVisibleIndex + lastVisibleIndex) >= posts.size - 1) {
         onLoadMoreItems()
     }
-
     LazyColumn(
         modifier = modifier.padding(paddingValues),
         state = lazyListState,

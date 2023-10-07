@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface PostService {
     companion object {
         const val BLOG_IDENTIFIER = "marvelentertainment.tumblr.com"
-        const val LIMIT = 10
+        const val LIMIT = 20
     }
 
     @GET("blog/${BLOG_IDENTIFIER}/posts/")

@@ -1,5 +1,9 @@
 package com.ikvakan.tumblrdemo.util
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
+import com.ikvakan.tumblrdemo.data.exception.ExceptionMappers
+import com.ikvakan.tumblrdemo.data.exception.remote.TumblrRemoteException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -12,7 +16,6 @@ typealias StartedCallBack = () -> Unit
 typealias ExceptionCallBack = (Exception) -> Unit
 typealias CancelCallBack = (Exception) -> Unit
 typealias FinishedCallBack = () -> Unit
-typealias OnCompleteCallBack = () -> Unit
 
 class Coroutine(
     private val coroutineScope: CoroutineScope,
@@ -23,28 +26,31 @@ class Coroutine(
         val exception: Exception? = null
     )
 
+    private lateinit var remoteExceptionMapper: ExceptionMappers.Remote
+
     private var progress = Progress()
     private var progressChangedCallback: ProgressChangedCallback? = null
     private var startedCallBack: StartedCallBack? = null
     private var exceptionCallback: ExceptionCallBack? = null
     private var cancelCallback: CancelCallBack? = null
     private var finishedCallback: FinishedCallBack? = null
-    private var onCompleteCallBack : OnCompleteCallBack? = null
     private var coroutineContext: CoroutineContext = EmptyCoroutineContext
     private var coroutineStart: CoroutineStart = CoroutineStart.DEFAULT
 
     fun onProgressChanged(callback: ProgressChangedCallback) =
         apply { this.progressChangedCallback = callback }
+    fun onException(callback: ExceptionCallBack) = apply { exceptionCallback = callback }
+    fun setRemoteExceptionMapper(exceptionMapper: ExceptionMappers.Remote) =
+        apply { remoteExceptionMapper = exceptionMapper }
 
     fun onStarted(callback: StartedCallBack) = apply { startedCallBack = callback }
-    fun onException(callback: ExceptionCallBack) = apply { exceptionCallback = callback }
     fun onCanceled(callback: CancelCallBack) = apply { cancelCallback = callback }
     fun onFinish(callback: FinishedCallBack) = apply { finishedCallback = callback }
-    fun onComplete(callback: FinishedCallBack) = apply { finishedCallback = callback }
 
     fun withContext(context: CoroutineContext) = apply { coroutineContext = context }
     fun setStart(start: CoroutineStart) = apply { coroutineStart = start }
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     fun launch() = coroutineScope.launch {
         try {
@@ -57,16 +63,20 @@ class Coroutine(
             cancelCallback?.invoke(e)
             updateProgress(inProgress = false)
         } catch (e: Exception) {
-            updateProgress(inProgress = false, exception = e)
             exceptionCallback?.invoke(e)
-        } finally {
-            updateProgress(inProgress = false)
-            onCompleteCallBack?.invoke()
+            updateProgress(
+                inProgress = false,
+                exception = mapException(remoteExceptionMapper, e)
+            )
         }
     }
 
     private fun updateProgress(inProgress: Boolean = false, exception: Exception? = null) {
         progress = progress.copy(inProgress = inProgress, exception = exception)
         progressChangedCallback?.invoke(progress)
+    }
+
+    private fun mapException(mapper: ExceptionMappers.Remote, e: Exception): TumblrRemoteException {
+        return mapper.map(e)
     }
 }

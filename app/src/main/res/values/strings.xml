@@ -7,4 +7,9 @@
     <string name="blog">Blog</string>
     <string name="post_summary">Summary:%1$s</string>
     <string name="summary">Summary</string>
+
+    <string name="error_server_unavailable">Service is temporarily unavailable. Please try again later.</string>
+    <string name="error_client">Invalid request. Please try again later. </string>
+    <string name="error_network">Network unavailable.</string>
+    <string name="error_general">Something went wrong. Please try again later.</string>
 </resources>

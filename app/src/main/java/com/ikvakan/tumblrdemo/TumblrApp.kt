@@ -3,6 +3,7 @@ package com.ikvakan.tumblrdemo
 import android.app.Application
 import com.ikvakan.tumblrdemo.di.app.viewModelModule
 import com.ikvakan.tumblrdemo.di.domain.domainModule
+import com.ikvakan.tumblrdemo.di.exception.exceptionModule
 import com.ikvakan.tumblrdemo.di.network.networkModule
 import com.ikvakan.tumblrdemo.di.remote.repositoryModule
 import org.koin.android.ext.koin.androidContext
@@ -22,7 +23,13 @@ class TumblrApp : Application() {
             androidLogger()
             androidContext(this@TumblrApp)
             //  add modules
-            modules(networkModule, repositoryModule, viewModelModule, domainModule)
+            modules(
+                networkModule,
+                repositoryModule,
+                viewModelModule,
+                domainModule,
+                exceptionModule
+            )
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.ikvakan.tumblrdemo.presentation.screens.posts
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import com.ikvakan.tumblrdemo.core.BaseViewModel
+import com.ikvakan.tumblrdemo.data.exception.ExceptionMappers
 import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.domain.repository.PostRepository
 import com.ikvakan.tumblrdemo.util.extensions.coroutine
@@ -31,8 +34,11 @@ data class PostsUiState(
         )
 }
 
-class PostsViewModel(private val postRepository: PostRepository) :
-    BaseViewModel() {
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+class PostsViewModel(
+    private val postRepository: PostRepository,
+    private val remoteExceptionMapper: ExceptionMappers.Remote
+) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(PostsUiState())
     val uiState = _uiState.asStateFlow()
@@ -49,7 +55,6 @@ class PostsViewModel(private val postRepository: PostRepository) :
 
         postsJob = coroutine {
             val posts = postRepository.getPosts()
-            Timber.d("posts:$posts")
             _uiState.update {
                 it.copy(
                     posts = posts,
@@ -57,7 +62,9 @@ class PostsViewModel(private val postRepository: PostRepository) :
                 )
             }
         }
+            .setRemoteExceptionMapper(exceptionMapper = remoteExceptionMapper)
             .onProgressChanged { progress ->
+                Timber.d("remote exception:${progress.exception}")
                 _uiState.update {
                     it.updateProgressState(
                         progress = progress.inProgress,
@@ -67,7 +74,6 @@ class PostsViewModel(private val postRepository: PostRepository) :
             }
             .onException {
                 Timber.e(it)
-                postsJob?.cancel()
             }
             .launch()
     }
@@ -105,6 +111,7 @@ class PostsViewModel(private val postRepository: PostRepository) :
             }
             Timber.d("post size:${_uiState.value.posts?.size}")
         }
+            .setRemoteExceptionMapper(exceptionMapper = remoteExceptionMapper)
             .onProgressChanged { progress ->
                 _uiState.update {
                     it.updateProgressState(
@@ -115,7 +122,6 @@ class PostsViewModel(private val postRepository: PostRepository) :
             }
             .onException {
                 Timber.e(it)
-                postsJob?.cancel()
             }
             .launch()
     }
@@ -150,7 +156,7 @@ class PostsViewModel(private val postRepository: PostRepository) :
 
     override fun onCleared() {
         postsJob?.cancel()
-        super.onCleared()
         Timber.d("onCleared:$this")
+        super.onCleared()
     }
 }

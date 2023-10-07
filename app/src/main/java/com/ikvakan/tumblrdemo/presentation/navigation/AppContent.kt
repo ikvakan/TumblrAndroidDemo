@@ -1,23 +1,30 @@
 package com.ikvakan.tumblrdemo.presentation.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.compose.collectAsLazyPagingItems
+import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.core.BaseAppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.drawer.AppDrawer
+import com.ikvakan.tumblrdemo.presentation.screens.composables.AppTopBar
+import com.ikvakan.tumblrdemo.presentation.screens.composables.NavigationIconType
 import com.ikvakan.tumblrdemo.presentation.screens.posts.FavoritesScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostDetailsScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostsScreen
@@ -30,6 +37,7 @@ import timber.log.Timber
 typealias Navigate = (screen: AppScreen) -> Unit
 typealias OnBack = () -> Unit
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun AppContent(
     postsViewModel: PostsViewModel = getViewModel()
@@ -51,7 +59,7 @@ fun AppContent(
     val coroutineScope = rememberCoroutineScope()
     val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentNavBackStackEntry?.destination?.route ?: AppScreen.PostsScreen.route
-
+    val snackBarHostState = remember { SnackbarHostState() }
     TumblrDemoTheme {
         AppDrawer(
             currentRoute = currentRoute,
@@ -76,13 +84,21 @@ fun AppContent(
                         viewModel = postsViewModel,
                         progress = uiState.progress,
                         onNavigate = onNavigate,
-                        exception = uiState.exception
-                    ) {
-
+                        snackBarHostState = snackBarHostState,
+                        coroutineScope = coroutineScope,
+                        exception = uiState.exception,
+                        topBar = {
+                            AppTopBar(
+                                topBarTitle = stringResource(id = R.string.posts),
+                                drawerState = drawerState,
+                                navigationIconType = NavigationIconType.DRAWER_ICON
+                            )
+                        }
+                    ) { paddingValues ->
                         PostsScreen(
+                            paddingValues = paddingValues,
                             posts = uiState.posts,
                             isLoadingMorePosts = uiState.isLoadingMorePosts,
-                            drawerState = drawerState,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
                             isRefreshing = uiState.isRefreshing,
                             onRefresh = { postsViewModel.onRefresh() },
@@ -101,25 +117,43 @@ fun AppContent(
 
                     BaseAppScreen(
                         viewModel = postsViewModel,
-                        onNavigate = onNavigate
-                    ) {
+                        onNavigate = onNavigate,
+                        snackBarHostState = snackBarHostState,
+                        coroutineScope = coroutineScope,
+                        topBar = {
+                            AppTopBar(
+                                topBarTitle = stringResource(id = R.string.post_details),
+                                navigationIconType = NavigationIconType.BACK_ICON,
+                                onBack = onBack
+                            )
+                        },
+                    ) { paddingValues ->
                         PostDetailsScreen(
+                            paddingValues = paddingValues,
                             post = uiState.selectedPost,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
-                            onBack = onBack
                         )
                     }
                 }
                 composable(route = AppScreen.FavoritesScreen.route) {
                     BaseAppScreen(
                         viewModel = postsViewModel,
-                        onNavigate = onNavigate
-                    ) {
+                        onNavigate = onNavigate,
+                        snackBarHostState = snackBarHostState,
+                        coroutineScope = coroutineScope,
+                        topBar = {
+                            AppTopBar(
+                                topBarTitle = stringResource(id = R.string.favorites),
+                                drawerState = drawerState,
+                                navigationIconType = NavigationIconType.DRAWER_ICON
+                            )
+                        }
+                    ) { paddingValues ->
                         FavoritesScreen(
+                            paddingValues = paddingValues,
                             posts = uiState.favoritePosts,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
-                            onNavigate = onNavigate,
-                            drawerState = drawerState
+                            onNavigate = onNavigate
                         )
                     }
                 }
