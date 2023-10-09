@@ -1,5 +1,7 @@
 package com.ikvakan.tumblrdemo.presentation.screens.composables
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,10 +12,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,21 +37,41 @@ import com.ikvakan.tumblrdemo.presentation.navigation.AppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
+@OptIn(
+    ExperimentalGlideComposeApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
     post: Post,
     onNavigate: Navigate,
+    onDeletePost: (Long?) -> Unit,
     onFavoriteClick: (postId: Long?) -> Unit
 ) {
+    var openDialog by remember { mutableStateOf(false) }
     Card(
-        onClick = { onNavigate(AppScreen.PostDetailsScreen(postId = post.id.toString())) },
         modifier = modifier
-            .padding(dimensionResource(id = R.dimen.small_padding)),
+            .padding(dimensionResource(id = R.dimen.small_padding))
+            .combinedClickable(
+                onClick = { onNavigate(AppScreen.PostDetailsScreen(postId = post.id.toString())) },
+                onLongClick = {
+                    openDialog = true
+                }
+            ),
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.default_elevation)),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
+        if (openDialog) {
+            AppAlertDialog(
+                onConfirm = {
+                    openDialog = it
+                    onDeletePost(post.id)
+                },
+                onDismiss = { openDialog = it }
+            )
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,6 +118,7 @@ fun AppCardPreview() {
     TumblrDemoTheme {
         AppCard(
             post = MockData().postEntities[0],
+            onDeletePost = {},
             onNavigate = {}
         ) {}
     }

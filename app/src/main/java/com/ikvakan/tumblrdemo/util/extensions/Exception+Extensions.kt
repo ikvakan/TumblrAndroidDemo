@@ -5,7 +5,7 @@ import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.exception.local.TumblrLocalException
 import com.ikvakan.tumblrdemo.data.exception.remote.TumblrRemoteException
 
-fun Exception.getMessage(context: Context): String {
+fun Exception.getErrorMessage(context: Context): String {
     return when (this) {
         is TumblrRemoteException -> {
             when (this) {
@@ -24,6 +24,6 @@ fun Exception.getMessage(context: Context): String {
         }
 
         is TumblrLocalException -> ""
-        else -> ""
+        else -> context.getString(R.string.error_general)
     }
 }

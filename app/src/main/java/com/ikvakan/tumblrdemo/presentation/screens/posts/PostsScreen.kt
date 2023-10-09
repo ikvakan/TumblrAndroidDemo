@@ -2,10 +2,6 @@ package com.ikvakan.tumblrdemo.presentation.screens.posts
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -26,6 +22,7 @@ fun PostsScreen(
     onRefresh: () -> Unit,
     isLoadingMorePosts: Boolean,
     onLoadMoreItems: () -> Unit,
+    onDeletePost: (Long?) -> Unit,
     onNavigate: Navigate
 ) {
     if (posts != null) {
@@ -47,12 +44,12 @@ fun PostsScreen(
                     paddingValues = paddingValues,
                     onLoadMoreItems = onLoadMoreItems,
                     isLoadingMorePosts = isLoadingMorePosts,
+                    onDeletePost = onDeletePost,
                     onNavigate = onNavigate
                 )
             }
         )
     }
-
 }
 
 @Preview(showBackground = true)
@@ -67,6 +64,7 @@ fun PostsScreenPreview() {
             onRefresh = {},
             isLoadingMorePosts = false,
             onLoadMoreItems = {},
+            onDeletePost = {},
             onFavoriteClick = {}
         )
     }

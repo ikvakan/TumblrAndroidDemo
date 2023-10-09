@@ -58,6 +58,7 @@ class PostsViewModel(
             _uiState.update {
                 it.copy(
                     posts = posts,
+                    favoritePosts = null,
                     isRefreshing = false
                 )
             }
@@ -78,15 +79,33 @@ class PostsViewModel(
             .launch()
     }
 
-    fun setSelectedPost(postId: Long?) {
-        val selectedPost = _uiState.value.posts?.firstOrNull { post ->
-            post.id == postId
+    fun onDeletePost(postId: Long?) {
+        postId.let {
+            val updatedPosts = _uiState.value.posts?.toMutableList()
+            val updatedFavorites = _uiState.value.favoritePosts?.toMutableList()
+            updatedPosts?.removeIf { post -> post.id == it }
+            updatedFavorites?.removeIf { post -> post.id == it }
+
+            _uiState.update { state ->
+                state.copy(
+                    posts = updatedPosts,
+                    favoritePosts = updatedFavorites
+                )
+            }
         }
-        Timber.d("selected post:$selectedPost")
-        _uiState.update { state ->
-            state.copy(
-                selectedPost = selectedPost
-            )
+    }
+
+    fun setSelectedPost(postId: Long?) {
+        postId.let {
+            val selectedPost = _uiState.value.posts?.firstOrNull { post ->
+                post.id == it
+            }
+            Timber.d("selected post:$selectedPost")
+            _uiState.update { state ->
+                state.copy(
+                    selectedPost = selectedPost
+                )
+            }
         }
     }
 
@@ -127,25 +146,27 @@ class PostsViewModel(
     }
 
     fun toggleIsFavoritePost(postId: Long?) {
-        _uiState.update { state ->
-            with(_uiState.value) {
+        postId.let {
+            _uiState.update { state ->
+                with(_uiState.value) {
+                    state.copy(
+                        posts = posts?.map { post ->
+                            if (post.id == it) {
+                                post.copy(isFavorite = !post.isFavorite)
+                            } else {
+                                post
+                            }
+                        },
+                        selectedPost = selectedPost?.copy(isFavorite = !selectedPost.isFavorite)
+                            ?: selectedPost,
+                    )
+                }
+            }
+            _uiState.update { state ->
                 state.copy(
-                    posts = posts?.map { post ->
-                        if (post.id == postId) {
-                            post.copy(isFavorite = !post.isFavorite)
-                        } else {
-                            post
-                        }
-                    },
-                    selectedPost = selectedPost?.copy(isFavorite = !selectedPost.isFavorite)
-                        ?: selectedPost,
+                    favoritePosts = _uiState.value.posts?.filter { post -> post.isFavorite }
                 )
             }
-        }
-        _uiState.update { state ->
-            state.copy(
-                favoritePosts = _uiState.value.posts?.filter { post -> post.isFavorite }
-            )
         }
     }
 

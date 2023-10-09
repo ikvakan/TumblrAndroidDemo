@@ -11,7 +11,8 @@ import java.net.UnknownHostException
 class TumblrRemoteExceptionMapper : ExceptionMappers.Remote {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun map(e: Exception): TumblrRemoteException {
-        var exception: TumblrRemoteException = TumblrRemoteException.UnknownRemoteException()
+        var exception: TumblrRemoteException =
+            TumblrRemoteException.UnknownRemoteException()
         when (e) {
             is SocketTimeoutException, is UnknownHostException -> {
                 exception = TumblrRemoteException.NetworkException()

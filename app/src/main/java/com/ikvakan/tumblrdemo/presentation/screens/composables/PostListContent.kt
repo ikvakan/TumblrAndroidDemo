@@ -25,6 +25,7 @@ fun PostListContent(
     posts: List<Post>,
     isLoadingMorePosts: Boolean = false,
     onFavoriteClick: (postId: Long?) -> Unit,
+    onDeletePost: (Long?) -> Unit,
     onLoadMoreItems: () -> Unit = {},
     paddingValues: PaddingValues,
     onNavigate: Navigate
@@ -46,10 +47,12 @@ fun PostListContent(
         modifier = modifier.padding(paddingValues),
         state = lazyListState,
         content = {
-            items(posts.size) { index ->
+            items(posts.size, key = { it }) { index ->
+
                 AppCard(
                     post = posts[index],
                     onFavoriteClick = onFavoriteClick,
+                    onDeletePost = onDeletePost,
                     onNavigate = onNavigate
                 )
             }
@@ -76,6 +79,7 @@ fun PostListContentPreview() {
             onFavoriteClick = {},
             paddingValues = PaddingValues(),
             onLoadMoreItems = {},
+            onDeletePost = {},
             isLoadingMorePosts = false,
             onNavigate = {}
         )

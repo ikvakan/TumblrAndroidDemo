@@ -11,13 +11,13 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
-import com.ikvakan.tumblrdemo.util.extensions.getMessage
+import com.ikvakan.tumblrdemo.util.extensions.getErrorMessage
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.Exception
@@ -29,11 +29,11 @@ fun BaseAppScreen(
     progress: Boolean = false,
     onNavigate: Navigate,
     coroutineScope: CoroutineScope,
-    snackBarHostState: SnackbarHostState,
     exception: Exception? = null,
     topBar: @Composable () -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ) {
+    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     if (viewModel != null) {
@@ -59,14 +59,13 @@ fun BaseAppScreen(
                 LaunchSnackBar(
                     coroutineScope = coroutineScope,
                     snackBarHostState = snackBarHostState,
-                    message = exception.getMessage(context = context),
+                    message = exception.getErrorMessage(context = context),
                     onDismiss = {}
                 )
             }
 
             Box(modifier = modifier.fillMaxSize()) {
                 content(paddingValues)
-
                 if (progress) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
@@ -86,7 +85,6 @@ fun LaunchSnackBar(
         coroutineScope.launch {
             val snackBarResult = snackBarHostState.showSnackbar(
                 message = message,
-
                 duration = SnackbarDuration.Short
             )
             when (snackBarResult) {

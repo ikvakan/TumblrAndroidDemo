@@ -7,15 +7,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,7 +56,7 @@ fun AppContent(
     val coroutineScope = rememberCoroutineScope()
     val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentNavBackStackEntry?.destination?.route ?: AppScreen.PostsScreen.route
-    val snackBarHostState = remember { SnackbarHostState() }
+
     TumblrDemoTheme {
         AppDrawer(
             currentRoute = currentRoute,
@@ -84,7 +81,6 @@ fun AppContent(
                         viewModel = postsViewModel,
                         progress = uiState.progress,
                         onNavigate = onNavigate,
-                        snackBarHostState = snackBarHostState,
                         coroutineScope = coroutineScope,
                         exception = uiState.exception,
                         topBar = {
@@ -103,6 +99,7 @@ fun AppContent(
                             isRefreshing = uiState.isRefreshing,
                             onRefresh = { postsViewModel.onRefresh() },
                             onLoadMoreItems = { postsViewModel.getAdditionalItems() },
+                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
                             onNavigate = onNavigate
                         )
                     }
@@ -118,7 +115,6 @@ fun AppContent(
                     BaseAppScreen(
                         viewModel = postsViewModel,
                         onNavigate = onNavigate,
-                        snackBarHostState = snackBarHostState,
                         coroutineScope = coroutineScope,
                         topBar = {
                             AppTopBar(
@@ -139,7 +135,6 @@ fun AppContent(
                     BaseAppScreen(
                         viewModel = postsViewModel,
                         onNavigate = onNavigate,
-                        snackBarHostState = snackBarHostState,
                         coroutineScope = coroutineScope,
                         topBar = {
                             AppTopBar(
@@ -153,6 +148,7 @@ fun AppContent(
                             paddingValues = paddingValues,
                             posts = uiState.favoritePosts,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
                             onNavigate = onNavigate
                         )
                     }

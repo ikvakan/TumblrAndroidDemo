@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.ikvakan.tumblrdemo.core.BaseViewModel
-import com.ikvakan.tumblrdemo.util.extensions.getMessage
+import com.ikvakan.tumblrdemo.util.extensions.getErrorMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ fun DisplayErrorSnackBar(
         LaunchedEffect(Unit) {
             coroutineScope.launch {
                 val snackBarResult = snackBarHostState.showSnackbar(
-                    message = exception.getMessage(context),
+                    message = exception.getErrorMessage(context),
                     duration = SnackbarDuration.Indefinite
                 )
                 when (snackBarResult) {

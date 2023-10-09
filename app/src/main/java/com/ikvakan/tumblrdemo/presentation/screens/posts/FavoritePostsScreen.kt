@@ -14,13 +14,15 @@ fun FavoritesScreen(
     paddingValues: PaddingValues,
     posts: List<Post>?,
     onFavoriteClick: (Long?) -> Unit,
-    onNavigate: Navigate,
+    onDeletePost: (Long?) -> Unit,
+    onNavigate: Navigate
 ) {
     if (posts != null) {
         PostListContent(
             posts = posts,
             onFavoriteClick = onFavoriteClick,
             paddingValues = paddingValues,
+            onDeletePost = onDeletePost,
             onNavigate = onNavigate
         )
     }
@@ -34,6 +36,7 @@ fun FavoritesScreenPreview() {
             paddingValues = PaddingValues(),
             posts = MockData().postEntities,
             onFavoriteClick = {},
+            onDeletePost = {},
             onNavigate = {}
         )
     }
