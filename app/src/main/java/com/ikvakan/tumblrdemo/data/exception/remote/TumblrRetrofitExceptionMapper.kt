@@ -8,7 +8,7 @@ import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-class TumblrRemoteExceptionMapper : ExceptionMappers.Remote {
+class TumblrRetrofitExceptionMapper : ExceptionMappers.Retrofit {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun map(e: Exception): TumblrRemoteException {
         var exception: TumblrRemoteException =

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
@@ -32,7 +33,7 @@ fun AppAlertDialog(
         },
         text = {
             Text(
-                text = "Are you sure you want to delete this post ?",
+                text = stringResource(R.string.are_you_sure_you_want_to_delete_this_post),
             )
         },
         confirmButton = {
@@ -42,7 +43,7 @@ fun AppAlertDialog(
                 },
                 content = {
                     Text(
-                        text = "Yes"
+                        text = stringResource(R.string.yes)
                     )
                 }
             )
@@ -54,7 +55,7 @@ fun AppAlertDialog(
                 },
                 content = {
                     Text(
-                        text = "Cancel"
+                        text = stringResource(R.string.cancel)
                     )
                 }
             )
@@ -69,7 +70,7 @@ fun AlertDialogTitle() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Delete Post",
+            text = stringResource(R.string.delete_post_dialog_title),
         )
         Spacer(modifier = Modifier.weight(1f))
         Icon(

@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.di.remote
+package com.ikvakan.tumblrdemo.di.repository
 
 import com.ikvakan.tumblrdemo.data.remote.repository.PostRemoteRepository
 import com.ikvakan.tumblrdemo.data.remote.repository.PostRemoteRepositoryImpl

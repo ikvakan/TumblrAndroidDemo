@@ -26,7 +26,7 @@ class Coroutine(
         val exception: Exception? = null
     )
 
-    private lateinit var remoteExceptionMapper: ExceptionMappers.Remote
+    private lateinit var retrofitExceptionMapper: ExceptionMappers.Retrofit
 
     private var progress = Progress()
     private var progressChangedCallback: ProgressChangedCallback? = null
@@ -40,8 +40,8 @@ class Coroutine(
     fun onProgressChanged(callback: ProgressChangedCallback) =
         apply { this.progressChangedCallback = callback }
     fun onException(callback: ExceptionCallBack) = apply { exceptionCallback = callback }
-    fun setRemoteExceptionMapper(exceptionMapper: ExceptionMappers.Remote) =
-        apply { remoteExceptionMapper = exceptionMapper }
+    fun setRemoteExceptionMapper(exceptionMapper: ExceptionMappers.Retrofit) =
+        apply { retrofitExceptionMapper = exceptionMapper }
 
     fun onStarted(callback: StartedCallBack) = apply { startedCallBack = callback }
     fun onCanceled(callback: CancelCallBack) = apply { cancelCallback = callback }
@@ -66,7 +66,7 @@ class Coroutine(
             exceptionCallback?.invoke(e)
             updateProgress(
                 inProgress = false,
-                exception = mapException(remoteExceptionMapper, e)
+                exception = mapException(retrofitExceptionMapper, e)
             )
         }
     }
@@ -76,7 +76,7 @@ class Coroutine(
         progressChangedCallback?.invoke(progress)
     }
 
-    private fun mapException(mapper: ExceptionMappers.Remote, e: Exception): TumblrRemoteException {
+    private fun mapException(mapper: ExceptionMappers.Retrofit, e: Exception): TumblrRemoteException {
         return mapper.map(e)
     }
 }

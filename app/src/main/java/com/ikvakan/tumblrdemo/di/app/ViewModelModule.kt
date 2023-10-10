@@ -10,7 +10,7 @@ import org.koin.dsl.module
 val viewModelModule = module {
 
     viewModel {
-        PostsViewModel(postRepository = get(), remoteExceptionMapper = get())
+        PostsViewModel(postRepository = get(), retrofitExceptionMapper = get())
     }
 
 }

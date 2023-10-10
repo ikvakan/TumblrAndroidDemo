@@ -12,7 +12,6 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PostDetailsScreen(
-    paddingValues: PaddingValues,
     post: Post?,
     onFavoriteClick: (Long?) -> Unit,
 ) {
@@ -20,7 +19,6 @@ fun PostDetailsScreen(
         DetailsScreenContent(
             post = post,
             onFavoriteClick = onFavoriteClick,
-            paddingValues = paddingValues
         )
     }
 }
@@ -30,7 +28,6 @@ fun PostDetailsScreen(
 fun PostDetailsScreenPreview() {
     TumblrDemoTheme {
         PostDetailsScreen(
-            paddingValues = PaddingValues(),
             post = MockData().postEntities[0],
             onFavoriteClick = {},
         )

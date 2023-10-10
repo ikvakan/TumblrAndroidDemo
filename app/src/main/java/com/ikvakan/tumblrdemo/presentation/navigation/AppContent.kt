@@ -90,9 +90,8 @@ fun AppContent(
                                 navigationIconType = NavigationIconType.DRAWER_ICON
                             )
                         }
-                    ) { paddingValues ->
+                    ) {
                         PostsScreen(
-                            paddingValues = paddingValues,
                             posts = uiState.posts,
                             isLoadingMorePosts = uiState.isLoadingMorePosts,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
@@ -123,9 +122,8 @@ fun AppContent(
                                 onBack = onBack
                             )
                         },
-                    ) { paddingValues ->
+                    ) {
                         PostDetailsScreen(
-                            paddingValues = paddingValues,
                             post = uiState.selectedPost,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
                         )
@@ -143,10 +141,9 @@ fun AppContent(
                                 navigationIconType = NavigationIconType.DRAWER_ICON
                             )
                         }
-                    ) { paddingValues ->
+                    ) {
                         FavoritesScreen(
-                            paddingValues = paddingValues,
-                            posts = uiState.favoritePosts,
+                            favoritePosts = uiState.favoritePosts,
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
                             onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
                             onNavigate = onNavigate

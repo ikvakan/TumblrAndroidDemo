@@ -37,7 +37,7 @@ data class PostsUiState(
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class PostsViewModel(
     private val postRepository: PostRepository,
-    private val remoteExceptionMapper: ExceptionMappers.Remote
+    private val retrofitExceptionMapper: ExceptionMappers.Retrofit
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(PostsUiState())
@@ -63,7 +63,7 @@ class PostsViewModel(
                 )
             }
         }
-            .setRemoteExceptionMapper(exceptionMapper = remoteExceptionMapper)
+            .setRemoteExceptionMapper(exceptionMapper = retrofitExceptionMapper)
             .onProgressChanged { progress ->
                 Timber.d("remote exception:${progress.exception}")
                 _uiState.update {
@@ -94,7 +94,6 @@ class PostsViewModel(
             }
         }
     }
-
     fun setSelectedPost(postId: Long?) {
         postId.let {
             val selectedPost = _uiState.value.posts?.firstOrNull { post ->
@@ -130,7 +129,7 @@ class PostsViewModel(
             }
             Timber.d("post size:${_uiState.value.posts?.size}")
         }
-            .setRemoteExceptionMapper(exceptionMapper = remoteExceptionMapper)
+            .setRemoteExceptionMapper(exceptionMapper = retrofitExceptionMapper)
             .onProgressChanged { progress ->
                 _uiState.update {
                     it.updateProgressState(
@@ -175,9 +174,12 @@ class PostsViewModel(
         getPosts()
     }
 
+    override fun onConnectionRestored(isConnected: Boolean) {
+        if (isConnected) getPosts()
+    }
     override fun onCleared() {
         postsJob?.cancel()
-        Timber.d("onCleared:$this")
         super.onCleared()
+        Timber.d("onCleared:$this")
     }
 }

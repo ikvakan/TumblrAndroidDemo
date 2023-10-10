@@ -2,7 +2,6 @@ package com.ikvakan.tumblrdemo.presentation.screens.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,7 +31,6 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 fun DetailsScreenContent(
     modifier: Modifier = Modifier,
     post: Post,
-    paddingValues: PaddingValues,
     onFavoriteClick: (Long?) -> Unit,
     imageSize: Dp = dimensionResource(id = R.dimen.large_image_size),
     iconSize: Dp = dimensionResource(id = R.dimen.large_icon_size)
@@ -40,7 +38,7 @@ fun DetailsScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(paddingValues),
+            .padding(dimensionResource(id = R.dimen.small_padding)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_padding))
     ) {
@@ -74,7 +72,6 @@ fun DetailsScreenContentPreview() {
         DetailsScreenContent(
             post = MockData().postEntities[0],
             onFavoriteClick = {},
-            paddingValues = PaddingValues()
         )
     }
 }

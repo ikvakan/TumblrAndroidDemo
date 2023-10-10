@@ -1,12 +1,15 @@
 package com.ikvakan.tumblrdemo.presentation.screens.posts
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
 import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
@@ -15,7 +18,6 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable
 fun PostsScreen(
-    paddingValues: PaddingValues,
     posts: List<Post>?,
     onFavoriteClick: (postId: Long?) -> Unit,
     isRefreshing: Boolean,
@@ -27,6 +29,7 @@ fun PostsScreen(
 ) {
     if (posts != null) {
         SwipeRefresh(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding)),
             state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
             onRefresh = onRefresh,
             indicator = { state, refreshTrigger ->
@@ -41,7 +44,6 @@ fun PostsScreen(
                 PostListContent(
                     posts = posts,
                     onFavoriteClick = onFavoriteClick,
-                    paddingValues = paddingValues,
                     onLoadMoreItems = onLoadMoreItems,
                     isLoadingMorePosts = isLoadingMorePosts,
                     onDeletePost = onDeletePost,
@@ -57,7 +59,6 @@ fun PostsScreen(
 fun PostsScreenPreview() {
     TumblrDemoTheme {
         PostsScreen(
-            paddingValues = PaddingValues(),
             posts = MockData().postEntities,
             onNavigate = {},
             isRefreshing = false,

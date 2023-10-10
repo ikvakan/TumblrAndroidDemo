@@ -1,6 +1,5 @@
 package com.ikvakan.tumblrdemo.presentation.screens.posts
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.data.mock.MockData
@@ -11,17 +10,15 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable
 fun FavoritesScreen(
-    paddingValues: PaddingValues,
-    posts: List<Post>?,
+    favoritePosts: List<Post>?,
     onFavoriteClick: (Long?) -> Unit,
     onDeletePost: (Long?) -> Unit,
     onNavigate: Navigate
 ) {
-    if (posts != null) {
+    if (favoritePosts != null) {
         PostListContent(
-            posts = posts,
+            posts = favoritePosts,
             onFavoriteClick = onFavoriteClick,
-            paddingValues = paddingValues,
             onDeletePost = onDeletePost,
             onNavigate = onNavigate
         )
@@ -33,8 +30,7 @@ fun FavoritesScreen(
 fun FavoritesScreenPreview() {
     TumblrDemoTheme {
         FavoritesScreen(
-            paddingValues = PaddingValues(),
-            posts = MockData().postEntities,
+            favoritePosts = MockData().postEntities,
             onFavoriteClick = {},
             onDeletePost = {},
             onNavigate = {}
