@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.di.network
+package com.ikvakan.tumblrdemo.di.remote
 
 import com.ikvakan.tumblrdemo.core.network.ConnectivityObserver
 import com.ikvakan.tumblrdemo.core.network.NetworkConnectivityObserver

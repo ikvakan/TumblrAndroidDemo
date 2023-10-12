@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.di.network
+package com.ikvakan.tumblrdemo.di.remote
 
 import com.ikvakan.tumblrdemo.BuildConfig
 import com.ikvakan.tumblrdemo.data.interceptor.ApiCallsInterceptor

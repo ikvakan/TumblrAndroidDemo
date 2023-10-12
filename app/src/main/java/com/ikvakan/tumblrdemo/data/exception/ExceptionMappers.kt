@@ -1,9 +1,7 @@
 package com.ikvakan.tumblrdemo.data.exception
 
-import com.ikvakan.tumblrdemo.data.exception.local.TumblrLocalException
-import com.ikvakan.tumblrdemo.data.exception.remote.TumblrRemoteException
+import com.ikvakan.tumblrdemo.data.exception.tumblr.TumblrException
 
 interface ExceptionMappers {
-    interface Retrofit : ExceptionMapper<TumblrRemoteException>
-    interface Room : ExceptionMapper<TumblrLocalException>
+    interface Tumblr : ExceptionMapper<TumblrException>
 }

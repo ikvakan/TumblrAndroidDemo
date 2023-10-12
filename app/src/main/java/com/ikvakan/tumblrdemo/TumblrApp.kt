@@ -6,9 +6,11 @@ import androidx.annotation.RequiresExtension
 import com.ikvakan.tumblrdemo.di.app.viewModelModule
 import com.ikvakan.tumblrdemo.di.domain.domainModule
 import com.ikvakan.tumblrdemo.di.exception.exceptionModule
-import com.ikvakan.tumblrdemo.di.network.connectivityModule
-import com.ikvakan.tumblrdemo.di.network.networkModule
-import com.ikvakan.tumblrdemo.di.repository.repositoryModule
+import com.ikvakan.tumblrdemo.di.local.databaseModule
+import com.ikvakan.tumblrdemo.di.local.localRepositoryModule
+import com.ikvakan.tumblrdemo.di.remote.connectivityModule
+import com.ikvakan.tumblrdemo.di.remote.networkModule
+import com.ikvakan.tumblrdemo.di.remote.remoteRepositoryModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -29,11 +31,13 @@ class TumblrApp : Application() {
             //  add modules
             modules(
                 networkModule,
-                repositoryModule,
+                remoteRepositoryModule,
+                localRepositoryModule,
                 viewModelModule,
                 domainModule,
                 exceptionModule,
-                connectivityModule
+                connectivityModule,
+                databaseModule
             )
         }
     }

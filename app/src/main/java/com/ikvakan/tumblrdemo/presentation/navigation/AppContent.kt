@@ -97,7 +97,7 @@ fun AppContent(
                             onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
                             isRefreshing = uiState.isRefreshing,
                             onRefresh = { postsViewModel.onRefresh() },
-                            onLoadMoreItems = { postsViewModel.getAdditionalItems() },
+                            onLoadMoreItems = { postsViewModel.getAdditionalPosts() },
                             onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
                             onNavigate = onNavigate
                         )

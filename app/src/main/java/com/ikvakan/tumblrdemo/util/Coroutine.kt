@@ -3,7 +3,7 @@ package com.ikvakan.tumblrdemo.util
 import android.os.Build
 import androidx.annotation.RequiresExtension
 import com.ikvakan.tumblrdemo.data.exception.ExceptionMappers
-import com.ikvakan.tumblrdemo.data.exception.remote.TumblrRemoteException
+import com.ikvakan.tumblrdemo.data.exception.tumblr.TumblrException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -26,7 +26,7 @@ class Coroutine(
         val exception: Exception? = null
     )
 
-    private lateinit var retrofitExceptionMapper: ExceptionMappers.Retrofit
+    private lateinit var tumblrExceptionMapper: ExceptionMappers.Tumblr
 
     private var progress = Progress()
     private var progressChangedCallback: ProgressChangedCallback? = null
@@ -39,9 +39,10 @@ class Coroutine(
 
     fun onProgressChanged(callback: ProgressChangedCallback) =
         apply { this.progressChangedCallback = callback }
+
     fun onException(callback: ExceptionCallBack) = apply { exceptionCallback = callback }
-    fun setRemoteExceptionMapper(exceptionMapper: ExceptionMappers.Retrofit) =
-        apply { retrofitExceptionMapper = exceptionMapper }
+    fun setExceptionMapper(exceptionMapper: ExceptionMappers.Tumblr) =
+        apply { tumblrExceptionMapper = exceptionMapper }
 
     fun onStarted(callback: StartedCallBack) = apply { startedCallBack = callback }
     fun onCanceled(callback: CancelCallBack) = apply { cancelCallback = callback }
@@ -66,7 +67,7 @@ class Coroutine(
             exceptionCallback?.invoke(e)
             updateProgress(
                 inProgress = false,
-                exception = mapException(retrofitExceptionMapper, e)
+                exception = mapException(tumblrExceptionMapper, e)
             )
         }
     }
@@ -76,7 +77,7 @@ class Coroutine(
         progressChangedCallback?.invoke(progress)
     }
 
-    private fun mapException(mapper: ExceptionMappers.Retrofit, e: Exception): TumblrRemoteException {
+    private fun mapException(mapper: ExceptionMappers.Tumblr, e: Exception): TumblrException {
         return mapper.map(e)
     }
 }

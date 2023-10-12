@@ -19,7 +19,7 @@ class PostRemoteRepositoryImpl(
     }
 
     override suspend fun getAdditionalPosts(offset: Int?): List<Post> {
-        val data = postService.getPosts(offset = (offset?.times(PostService.LIMIT))).response
+        val data = postService.getPosts(offset = (offset?.plus(PostService.LIMIT))).response
         Timber.d("getAdditionalPostSize:${data.posts.size}")
         return data.toPostEntityList()
     }

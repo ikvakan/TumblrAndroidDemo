@@ -37,7 +37,7 @@ data class PostsUiState(
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class PostsViewModel(
     private val postRepository: PostRepository,
-    private val retrofitExceptionMapper: ExceptionMappers.Retrofit
+    private val tumblrExceptionMapper: ExceptionMappers.Tumblr
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(PostsUiState())
@@ -55,15 +55,16 @@ class PostsViewModel(
 
         postsJob = coroutine {
             val posts = postRepository.getPosts()
-            _uiState.update {
-                it.copy(
+            val favoritePosts = postRepository.getFavoritePosts()
+            _uiState.update { state ->
+                state.copy(
                     posts = posts,
-                    favoritePosts = null,
+                    favoritePosts = favoritePosts,
                     isRefreshing = false
                 )
             }
         }
-            .setRemoteExceptionMapper(exceptionMapper = retrofitExceptionMapper)
+            .setExceptionMapper(exceptionMapper = tumblrExceptionMapper)
             .onProgressChanged { progress ->
                 Timber.d("remote exception:${progress.exception}")
                 _uiState.update {
@@ -94,6 +95,7 @@ class PostsViewModel(
             }
         }
     }
+
     fun setSelectedPost(postId: Long?) {
         postId.let {
             val selectedPost = _uiState.value.posts?.firstOrNull { post ->
@@ -108,8 +110,8 @@ class PostsViewModel(
         }
     }
 
-    fun getAdditionalItems() {
-        Timber.d("getAdditionalItems")
+    fun getAdditionalPosts() {
+        Timber.d("getAdditionalPosts")
         postsJob?.cancel()
 
         if (_uiState.value.isLoadingMorePosts) {
@@ -120,16 +122,14 @@ class PostsViewModel(
             val additionalPosts =
                 postRepository.getAdditionalPosts(offset = _uiState.value.posts?.size)
             _uiState.update {
-                with(_uiState.value) {
-                    it.copy(
-                        posts = posts?.plus(additionalPosts),
-                        isRefreshing = false
-                    )
-                }
+                it.copy(
+                    posts = additionalPosts,
+                    isRefreshing = false
+                )
             }
             Timber.d("post size:${_uiState.value.posts?.size}")
         }
-            .setRemoteExceptionMapper(exceptionMapper = retrofitExceptionMapper)
+            .setExceptionMapper(exceptionMapper = tumblrExceptionMapper)
             .onProgressChanged { progress ->
                 _uiState.update {
                     it.updateProgressState(
@@ -145,9 +145,35 @@ class PostsViewModel(
     }
 
     fun toggleIsFavoritePost(postId: Long?) {
-        postId.let {
-            _uiState.update { state ->
+        updateFavoritePosts(postId)
+        setFavoritePostInDb(postId)
+    }
+
+    private fun setFavoritePostInDb(postId: Long?) {
+        Timber.d("setFavoritePostInDb")
+        postsJob?.cancel()
+        postId?.let { id ->
+            postsJob = coroutine {
                 with(_uiState.value) {
+                    val favoritePost = posts?.first { post -> post.id == id }
+                    postRepository.setFavoritePostInDb(favoritePost)
+                }
+            }.setExceptionMapper(tumblrExceptionMapper)
+                .onException {
+                    Timber.e(it)
+                }
+                .launch()
+        }
+    }
+
+    private fun filterFavoritePosts(): List<Post>? {
+        return _uiState.value.posts?.filter { post -> post.isFavorite }
+    }
+
+    private fun updateFavoritePosts(postId: Long?) {
+        postId.let {
+            with(_uiState.value) {
+                _uiState.update { state ->
                     state.copy(
                         posts = posts?.map { post ->
                             if (post.id == it) {
@@ -160,11 +186,11 @@ class PostsViewModel(
                             ?: selectedPost,
                     )
                 }
-            }
-            _uiState.update { state ->
-                state.copy(
-                    favoritePosts = _uiState.value.posts?.filter { post -> post.isFavorite }
-                )
+                _uiState.update { state ->
+                    state.copy(
+                        favoritePosts = filterFavoritePosts()
+                    )
+                }
             }
         }
     }
@@ -177,6 +203,7 @@ class PostsViewModel(
     override fun onConnectionRestored(isConnected: Boolean) {
         if (isConnected) getPosts()
     }
+
     override fun onCleared() {
         postsJob?.cancel()
         super.onCleared()

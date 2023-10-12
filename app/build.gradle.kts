@@ -28,6 +28,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("boolean", "LOGS", "true")
+        buildConfigField("String", "APP_DATABASE", "\"app_database\"")
         buildConfigField("String", "API_BASE_URL", "\"https://api.tumblr.com/v2/\"")
         buildConfigField(
             "String",
