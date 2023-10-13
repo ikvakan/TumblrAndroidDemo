@@ -10,7 +10,9 @@ interface PostRepository {
     suspend fun getAdditionalPosts(offset: Int?): List<Post>
 
     suspend fun setFavoritePostInDb(post: Post?)
-    suspend fun getFavoritePosts(): List<Post>?
+    suspend fun getFavoritePostsFromDb(): List<Post>?
+
+    suspend fun deletePostFromDb(postId: Long?)
 }
 
 class PostRepositoryImpl(
@@ -42,5 +44,6 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun getFavoritePosts(): List<Post>? = localDataSource.getFavoritePosts()
+    override suspend fun getFavoritePostsFromDb(): List<Post>? = localDataSource.getFavoritePosts()
+    override suspend fun deletePostFromDb(postId: Long?) = localDataSource.deletePost(postId)
 }

@@ -37,7 +37,7 @@ data class PostsUiState(
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class PostsViewModel(
     private val postRepository: PostRepository,
-    private val tumblrExceptionMapper: ExceptionMappers.Tumblr
+    private val exceptionMapper: ExceptionMappers.Tumblr
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(PostsUiState())
@@ -55,7 +55,7 @@ class PostsViewModel(
 
         postsJob = coroutine {
             val posts = postRepository.getPosts()
-            val favoritePosts = postRepository.getFavoritePosts()
+            val favoritePosts = postRepository.getFavoritePostsFromDb()
             _uiState.update { state ->
                 state.copy(
                     posts = posts,
@@ -64,7 +64,7 @@ class PostsViewModel(
                 )
             }
         }
-            .setExceptionMapper(exceptionMapper = tumblrExceptionMapper)
+            .setExceptionMapper(exceptionMapper = exceptionMapper)
             .onProgressChanged { progress ->
                 Timber.d("remote exception:${progress.exception}")
                 _uiState.update {
@@ -82,6 +82,7 @@ class PostsViewModel(
 
     fun onDeletePost(postId: Long?) {
         postId.let {
+            deletePostFromDb(it)
             val updatedPosts = _uiState.value.posts?.toMutableList()
             val updatedFavorites = _uiState.value.favoritePosts?.toMutableList()
             updatedPosts?.removeIf { post -> post.id == it }
@@ -94,6 +95,19 @@ class PostsViewModel(
                 )
             }
         }
+    }
+
+    private fun deletePostFromDb(postId: Long?) {
+        Timber.d("deletePostFromDb")
+        postsJob?.cancel()
+
+        postsJob = coroutine {
+            postRepository.deletePostFromDb(postId)
+        }.setExceptionMapper(exceptionMapper)
+            .onException {
+                Timber.e(it)
+            }
+            .launch()
     }
 
     fun setSelectedPost(postId: Long?) {
@@ -129,7 +143,7 @@ class PostsViewModel(
             }
             Timber.d("post size:${_uiState.value.posts?.size}")
         }
-            .setExceptionMapper(exceptionMapper = tumblrExceptionMapper)
+            .setExceptionMapper(exceptionMapper = exceptionMapper)
             .onProgressChanged { progress ->
                 _uiState.update {
                     it.updateProgressState(
@@ -158,7 +172,7 @@ class PostsViewModel(
                     val favoritePost = posts?.first { post -> post.id == id }
                     postRepository.setFavoritePostInDb(favoritePost)
                 }
-            }.setExceptionMapper(tumblrExceptionMapper)
+            }.setExceptionMapper(exceptionMapper)
                 .onException {
                     Timber.e(it)
                 }

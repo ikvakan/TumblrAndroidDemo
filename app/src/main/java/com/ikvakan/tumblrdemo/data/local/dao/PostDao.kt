@@ -19,4 +19,7 @@ interface PostDao {
 
     @Query("SELECT * FROM posts WHERE isFavorite =1")
     suspend fun getFavoritePosts(): List<PostLocalDto>
+
+    @Query("DELETE FROM posts WHERE id = :postId")
+    suspend fun deletePost(postId: Long?)
 }

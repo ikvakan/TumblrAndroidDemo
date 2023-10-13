@@ -13,6 +13,8 @@ interface PostLocalRepository {
     suspend fun getPosts(): List<Post>
 
     suspend fun getFavoritePosts(): List<Post>?
+
+    suspend fun deletePost(postId: Long?)
 }
 
 class PostLocalRepositoryImpl(private val postDao: PostDao) : PostLocalRepository {
@@ -22,4 +24,5 @@ class PostLocalRepositoryImpl(private val postDao: PostDao) : PostLocalRepositor
     override suspend fun getPosts(): List<Post> = postDao.getPosts().map { it.toPost() }
 
     override suspend fun getFavoritePosts(): List<Post> = postDao.getFavoritePosts().map { it.toPost() }
+    override suspend fun deletePost(postId: Long?) = postDao.deletePost(postId)
 }
