@@ -1,7 +1,6 @@
 package com.ikvakan.tumblrdemo.data.remote.model
 
 import com.squareup.moshi.JsonClass
-import java.math.BigInteger
 
 @JsonClass(generateAdapter = true)
 data class PostRemoteDto(

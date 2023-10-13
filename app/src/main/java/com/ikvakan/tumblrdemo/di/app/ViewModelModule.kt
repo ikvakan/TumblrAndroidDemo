@@ -12,5 +12,4 @@ val viewModelModule = module {
     viewModel {
         PostsViewModel(postRepository = get(), exceptionMapper = get())
     }
-
 }

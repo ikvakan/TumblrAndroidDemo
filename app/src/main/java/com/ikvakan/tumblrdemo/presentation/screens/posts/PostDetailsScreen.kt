@@ -1,7 +1,6 @@
 package com.ikvakan.tumblrdemo.presentation.screens.posts
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.data.mock.MockData
