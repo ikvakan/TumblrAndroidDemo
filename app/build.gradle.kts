@@ -9,30 +9,31 @@ plugins {
 }
 
 android {
-    namespace = "com.ikvakan.tumblrdemo"
-    compileSdk = 34
+
+    namespace = AppConfig.NAMESPACE
+    compileSdk = AppConfig.COMPILE_SDK
 
     buildFeatures {
         buildConfig = true
     }
 
     defaultConfig {
-        applicationId = "com.ikvakan.tumblrdemo"
-        minSdk = 26
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = AppConfig.APPLICATION_ID
+        minSdk = AppConfig.MIN_SDK
+        targetSdk = AppConfig.TAGRGET_SDK
+        versionCode = AppConfig.VERSION_CODE
+        versionName = AppConfig.VERSION_NAME
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("boolean", "LOGS", "true")
-        buildConfigField("String", "APP_DATABASE", "\"app_database\"")
-        buildConfigField("String", "API_BASE_URL", "\"https://api.tumblr.com/v2/\"")
+        buildConfigField(BuildConfig.TYPE.BOOLEAN, BuildConfig.NAME.LOGS, "true")
+        buildConfigField(BuildConfig.TYPE.STRING, BuildConfig.NAME.APP_DATABASE, "\"app_database\"")
+        buildConfigField(BuildConfig.TYPE.STRING, BuildConfig.NAME.API_BASE_URL, "\"https://api.tumblr.com/v2/\"")
         buildConfigField(
-            "String",
-            "API_KEY",
+            BuildConfig.TYPE.STRING,
+            BuildConfig.NAME.API_KEY,
             "\"${getProperty("local.properties","api_key") ?: ""}\""
         )
     }
@@ -46,7 +47,7 @@ android {
             )
             var removeLogs = true
             if (removeLogs) {
-                buildConfigField("boolean", "LOGS", "false")
+                buildConfigField(BuildConfig.TYPE.BOOLEAN, BuildConfig.NAME.LOGS, "false")
             }
         }
     }
@@ -55,13 +56,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = AppConfig.JVM_TARGET
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = AppConfig.KOTLIN_COMPILER_EXTENSION_VERSION
     }
     packaging {
         resources {
@@ -69,7 +70,7 @@ android {
         }
     }
     detekt {
-        toolVersion = "1.23.1"
+        toolVersion = DependencyVersions.DETEKT
         config.setFrom(files("${rootProject.projectDir}/config/detekt/detekt.yml"))
         buildUponDefaultConfig = true
         autoCorrect = true
@@ -78,9 +79,6 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -89,6 +87,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    androidx()
     glide()
     compose()
     timber()

@@ -1,4 +1,8 @@
+
 object DependencyVersions {
+    const val CORE_KTX = "1.9.0"
+    const val LIFECYCLE_RUNTIME_KTX = "2.6.1"
+    const val ACTIVITY_COMPOSE = "1.7.2"
     const val OK_HTTP = "5.0.0-alpha.2"
     const val RETROFIT = "2.9.0"
     const val ROOM = "2.5.0"
@@ -16,3 +20,4 @@ object DependencyVersions {
     const val PAGING_COMPOSE = "3.3.0-alpha02"
 
 }
+

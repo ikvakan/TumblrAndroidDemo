@@ -1,6 +1,10 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 object Dependencies {
+    const val ANDROIDX_CORE_KTX="androidx.core:core-ktx:${DependencyVersions.CORE_KTX}"
+    const val ANDROIDX_LIFECYCLE_RUNTIME_KTX="androidx.lifecycle:lifecycle-runtime-ktx:${DependencyVersions.LIFECYCLE_RUNTIME_KTX}"
+    const val ANDROIDX_ACTIVITY_COMPOSE="androidx.activity:activity-compose:${DependencyVersions.ACTIVITY_COMPOSE}"
+
     const val OK_HTTP = "com.squareup.okhttp3:okhttp:${DependencyVersions.OK_HTTP}"
     const val OK_HTTP_LOGGING_INTERCEPTOR =
         "com.squareup.okhttp3:logging-interceptor:${DependencyVersions.OK_HTTP}"
@@ -39,6 +43,12 @@ object Dependencies {
 
     const val PAGING_RUNTIME= "androidx.paging:paging-runtime:${DependencyVersions.PAGING_RUNTIME}"
     const val PAGING_COMPOSE= "androidx.paging:paging-compose:${DependencyVersions.PAGING_COMPOSE}"
+}
+
+fun DependencyHandler.androidx(){
+    implementation(Dependencies.ANDROIDX_CORE_KTX)
+    implementation(Dependencies.ANDROIDX_ACTIVITY_COMPOSE)
+    implementation(Dependencies.ANDROIDX_LIFECYCLE_RUNTIME_KTX)
 }
 
 fun DependencyHandler.paging(){
