@@ -4,6 +4,7 @@ A sample app that utilizes [Clean Architecture](https://developer.android.com/to
 
 ## Setup
 * Requires [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+* [Kotlin DSL](https://docs.gradle.org/current/userguide/kotlin_dsl.html) 
   
 `Make sure to check the build.gradle files for more details on library versions.`
 
