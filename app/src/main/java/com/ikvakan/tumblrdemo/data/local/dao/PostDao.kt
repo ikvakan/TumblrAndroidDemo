@@ -7,7 +7,6 @@ import com.ikvakan.tumblrdemo.data.local.model.PostLocalDto
 
 @Dao
 interface PostDao {
-
     @Upsert
     suspend fun upsertPost(post: PostLocalDto)
 

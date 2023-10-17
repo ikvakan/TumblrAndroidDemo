@@ -11,11 +11,11 @@ object AppConfig {
 }
 
 object BuildConfig {
-    object TYPE {
+    object Type {
         const val BOOLEAN = "boolean"
         const val STRING = "String"
     }
-    object NAME {
+    object Name {
         const val LOGS = "LOGS"
         const val APP_DATABASE = "APP_DATABASE"
         const val API_BASE_URL = "API_BASE_URL"

@@ -8,10 +8,8 @@ import timber.log.Timber
 interface PostRepository {
     suspend fun getPosts(): List<Post>
     suspend fun getAdditionalPosts(offset: Int?): List<Post>
-
     suspend fun setFavoritePostInDb(post: Post?)
     suspend fun getFavoritePostsFromDb(): List<Post>?
-
     suspend fun deletePostFromDb(postId: Long?)
 }
 

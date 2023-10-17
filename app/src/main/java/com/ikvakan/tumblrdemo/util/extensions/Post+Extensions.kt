@@ -3,7 +3,7 @@ package com.ikvakan.tumblrdemo.util.extensions
 import com.ikvakan.tumblrdemo.data.local.model.PostLocalDto
 import com.ikvakan.tumblrdemo.domain.model.Post
 
-fun Post.toLocalDto(): PostLocalDto {
+fun Post.toPostLocalDto(): PostLocalDto {
     return PostLocalDto(
         id = this.id,
         blogTitle = this.blogTitle,

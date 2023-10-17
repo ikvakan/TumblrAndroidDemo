@@ -28,12 +28,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField(BuildConfig.TYPE.BOOLEAN, BuildConfig.NAME.LOGS, "true")
-        buildConfigField(BuildConfig.TYPE.STRING, BuildConfig.NAME.APP_DATABASE, "\"app_database\"")
-        buildConfigField(BuildConfig.TYPE.STRING, BuildConfig.NAME.API_BASE_URL, "\"https://api.tumblr.com/v2/\"")
+        buildConfigField(BuildConfig.Type.BOOLEAN, BuildConfig.Name.LOGS, "true")
+        buildConfigField(BuildConfig.Type.STRING, BuildConfig.Name.APP_DATABASE, "\"app_database\"")
+        buildConfigField(BuildConfig.Type.STRING, BuildConfig.Name.API_BASE_URL, "\"https://api.tumblr.com/v2/\"")
         buildConfigField(
-            BuildConfig.TYPE.STRING,
-            BuildConfig.NAME.API_KEY,
+            BuildConfig.Type.STRING,
+            BuildConfig.Name.API_KEY,
             "\"${getProperty("local.properties","api_key") ?: ""}\""
         )
     }
@@ -47,7 +47,7 @@ android {
             )
             var removeLogs = true
             if (removeLogs) {
-                buildConfigField(BuildConfig.TYPE.BOOLEAN, BuildConfig.NAME.LOGS, "false")
+                buildConfigField(BuildConfig.Type.BOOLEAN, BuildConfig.Name.LOGS, "false")
             }
         }
     }
