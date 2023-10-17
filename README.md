@@ -28,6 +28,8 @@ A sample app that utilizes [Clean Architecture](https://developer.android.com/to
 * [Room](https://developer.android.com/jetpack/androidx/releases/room) - Room persistence library
   
 ## Other
+### Design
+* Material 3
 ### Image loading
 * [Glide](https://github.com/bumptech/glide) - 
 An image loading and caching library for Android focused on smooth scrolling
