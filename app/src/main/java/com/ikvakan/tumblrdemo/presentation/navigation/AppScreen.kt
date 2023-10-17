@@ -4,6 +4,10 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
+/**
+ * Class that defines app routes and provides navigation parameters to other composables in the [AppContent] composable
+ */
+
 sealed class AppScreen {
     abstract val routeDef: String
     var clearBackstack = false

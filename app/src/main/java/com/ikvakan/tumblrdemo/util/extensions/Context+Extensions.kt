@@ -14,12 +14,21 @@ fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
 }
 
+/**
+ * Gets current network state in the [BaseAppScreen] composable
+ */
+
 val Context.currentNetworkState: NetworkConnectionState
     get() {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return getCurrentNetworkState(connectivityManager)
     }
+
+/**
+ * Flow that monitors network capability and observes connection state defined in the [NetworkConnectivityObserver]
+ * and is consumed in the [BaseAppScreen] through [BaseViewModel]
+ */
 
 fun Context.observeNetworkConnectivity() = callbackFlow {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -52,6 +61,7 @@ private fun networkCallback(callback: (NetworkConnectionState) -> Unit): Connect
         override fun onAvailable(network: Network) {
             callback(NetworkConnectionState.Connected)
         }
+
         override fun onLost(network: Network) {
             callback(NetworkConnectionState.Disconnected)
         }

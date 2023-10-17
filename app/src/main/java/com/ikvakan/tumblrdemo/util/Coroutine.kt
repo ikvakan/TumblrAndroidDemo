@@ -17,6 +17,12 @@ typealias ExceptionCallBack = (Exception) -> Unit
 typealias CancelCallBack = (Exception) -> Unit
 typealias FinishedCallBack = () -> Unit
 
+/**
+ * Flexible custom Coroutine builder with callbacks used in view model to call suspended functions.
+ * Automates progress and exception handling. See [PostsViewModel].
+ * Handles and maps exceptions in the catch block with [ExceptionMappers.Tumblr]
+ */
+
 class Coroutine(
     private val coroutineScope: CoroutineScope,
     private val coroutineBlock: suspend CoroutineScope.() -> Unit

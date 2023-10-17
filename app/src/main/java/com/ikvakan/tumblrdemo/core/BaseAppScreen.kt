@@ -27,6 +27,11 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.Exception
 
+/**
+ * Composable that is used as a wrapper - parent to other composables that represent other app screens.
+ * Executes navigation from [BaseViewModel] and displays progress state as well as error messages in the snackbar.
+ * Monitors network state and collects the flow from the [BaseViewModel].
+ */
 @Composable
 fun BaseAppScreen(
     modifier: Modifier = Modifier,
@@ -41,6 +46,7 @@ fun BaseAppScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    // handles navigation from view model
     if (viewModel != null) {
         LaunchedEffect(Unit) {
             Timber.d("monitoringNavigationFlow")

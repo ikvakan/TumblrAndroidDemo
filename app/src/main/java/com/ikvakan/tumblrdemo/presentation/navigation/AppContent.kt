@@ -34,6 +34,11 @@ import timber.log.Timber
 typealias Navigate = (screen: AppScreen) -> Unit
 typealias OnBack = () -> Unit
 
+/**
+ * Entry point to all other composables, provides navigation components
+ * and screen structure along with view models and states used for each screen.
+ */
+
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun AppContent(
