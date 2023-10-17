@@ -29,7 +29,7 @@ A sample app that utilizes [Clean Architecture](https://developer.android.com/to
   
 ## Other
 ### Design
-* Material 3
+* [Material 3](https://m3.material.io/develop/android/jetpack-compose)
 ### Image loading
 * [Glide](https://github.com/bumptech/glide) - 
 An image loading and caching library for Android focused on smooth scrolling
