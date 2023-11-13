@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.presentation.navigation
+package com.ikvakan.tumblrdemo.presentation
 
 import android.os.Build
 import androidx.annotation.RequiresExtension
@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState

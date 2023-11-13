@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.R
-import com.ikvakan.tumblrdemo.presentation.navigation.OnBack
+import com.ikvakan.tumblrdemo.presentation.OnBack
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 import kotlinx.coroutines.launch
 

@@ -21,8 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.R
-import com.ikvakan.tumblrdemo.presentation.navigation.AppScreen
-import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
+import com.ikvakan.tumblrdemo.presentation.AppScreen
+import com.ikvakan.tumblrdemo.presentation.Navigate
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable

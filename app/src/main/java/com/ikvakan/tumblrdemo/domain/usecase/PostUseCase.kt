@@ -1,25 +1,23 @@
-package com.ikvakan.tumblrdemo.domain.repository
+package com.ikvakan.tumblrdemo.domain.usecase
 
 import com.ikvakan.tumblrdemo.data.local.repository.PostLocalRepository
 import com.ikvakan.tumblrdemo.data.remote.repository.PostRemoteRepository
 import com.ikvakan.tumblrdemo.domain.model.Post
+import kotlinx.coroutines.delay
 import timber.log.Timber
 
-interface PostRepository {
+interface PostUseCase {
     suspend fun getPosts(): List<Post>
     suspend fun getAdditionalPosts(offset: Int?): List<Post>
-
     suspend fun setFavoritePostInDb(post: Post?)
     suspend fun getFavoritePostsFromDb(): List<Post>?
-
     suspend fun deletePostFromDb(postId: Long?)
 }
 
-class PostRepositoryImpl(
+class PostUseCaseImpl(
     private val remoteDataSource: PostRemoteRepository,
     private val localDataSource: PostLocalRepository
-) : PostRepository {
-
+) : PostUseCase {
     override suspend fun getPosts(): List<Post> {
         val postsDb = localDataSource.getPosts().reversed()
         Timber.d("postsDb:${postsDb.size}")

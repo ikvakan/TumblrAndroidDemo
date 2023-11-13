@@ -1,8 +1,8 @@
 package com.ikvakan.tumblrdemo.data.remote.repository
 
+import com.ikvakan.tumblrdemo.data.mapper.toEntityList
 import com.ikvakan.tumblrdemo.data.remote.service.PostService
 import com.ikvakan.tumblrdemo.domain.model.Post
-import com.ikvakan.tumblrdemo.util.extensions.toPostEntityList
 import timber.log.Timber
 
 interface PostRemoteRepository {
@@ -15,12 +15,12 @@ class PostRemoteRepositoryImpl(
 ) : PostRemoteRepository {
     override suspend fun getPosts(): List<Post> {
         val data = postService.getPosts().response
-        return data.toPostEntityList()
+        return data.toEntityList()
     }
 
     override suspend fun getAdditionalPosts(offset: Int?): List<Post> {
         val data = postService.getPosts(offset = (offset?.plus(PostService.LIMIT))).response
         Timber.d("getAdditionalPostSize:${data.posts.size}")
-        return data.toPostEntityList()
+        return data.toEntityList()
     }
 }

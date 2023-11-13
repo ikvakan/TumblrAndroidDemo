@@ -3,14 +3,13 @@ package com.ikvakan.tumblrdemo.util
 import android.os.Build
 import androidx.annotation.RequiresExtension
 import com.ikvakan.tumblrdemo.data.exception.ExceptionMappers
-import com.ikvakan.tumblrdemo.data.exception.tumblr.TumblrException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
-
+typealias CoroutineBlockCallBack = suspend () -> Unit
 typealias ProgressChangedCallback = (Coroutine.Progress) -> Unit
 typealias StartedCallBack = () -> Unit
 typealias ExceptionCallBack = (Exception) -> Unit
@@ -40,7 +39,7 @@ class Coroutine(
     fun onProgressChanged(callback: ProgressChangedCallback) =
         apply { this.progressChangedCallback = callback }
 
-    fun onException(callback: ExceptionCallBack) = apply { exceptionCallback = callback }
+    fun onException(callback: ((Exception) -> Unit)?) = apply { exceptionCallback = callback }
     fun setExceptionMapper(exceptionMapper: ExceptionMappers.Tumblr) =
         apply { tumblrExceptionMapper = exceptionMapper }
 
@@ -77,7 +76,5 @@ class Coroutine(
         progressChangedCallback?.invoke(progress)
     }
 
-    private fun mapException(mapper: ExceptionMappers.Tumblr, e: Exception): TumblrException {
-        return mapper.map(e)
-    }
+    private fun mapException(mapper: ExceptionMappers.Tumblr, e: Exception) = mapper.map(e)
 }
