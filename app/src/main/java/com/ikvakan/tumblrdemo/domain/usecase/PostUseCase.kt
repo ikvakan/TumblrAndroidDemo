@@ -3,7 +3,6 @@ package com.ikvakan.tumblrdemo.domain.usecase
 import com.ikvakan.tumblrdemo.data.local.repository.PostLocalRepository
 import com.ikvakan.tumblrdemo.data.remote.repository.PostRemoteRepository
 import com.ikvakan.tumblrdemo.domain.model.Post
-import kotlinx.coroutines.delay
 import timber.log.Timber
 
 interface PostUseCase {
