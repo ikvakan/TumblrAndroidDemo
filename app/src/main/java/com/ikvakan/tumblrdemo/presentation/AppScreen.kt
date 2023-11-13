@@ -1,4 +1,4 @@
-package com.ikvakan.tumblrdemo.presentation.navigation
+package com.ikvakan.tumblrdemo.presentation
 
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
@@ -49,7 +49,6 @@ sealed class AppScreen {
         companion object {
             const val route = "favoritesScreen"
         }
-
         init {
             clearBackstack = true
         }

@@ -3,14 +3,9 @@ package com.ikvakan.tumblrdemo.presentation.screens.posts
 import android.os.Build
 import androidx.annotation.RequiresExtension
 import com.ikvakan.tumblrdemo.core.BaseViewModel
-import com.ikvakan.tumblrdemo.data.exception.ExceptionMappers
 import com.ikvakan.tumblrdemo.domain.model.Post
-import com.ikvakan.tumblrdemo.domain.repository.PostRepository
-import com.ikvakan.tumblrdemo.util.extensions.coroutine
+import com.ikvakan.tumblrdemo.domain.usecase.PostUseCase
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import timber.log.Timber
 
 data class PostsUiState(
@@ -36,12 +31,8 @@ data class PostsUiState(
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class PostsViewModel(
-    private val postRepository: PostRepository,
-    private val exceptionMapper: ExceptionMappers.Tumblr
-) : BaseViewModel() {
-
-    private val _uiState = MutableStateFlow(PostsUiState())
-    val uiState = _uiState.asStateFlow()
+    private val postUseCase: PostUseCase
+) : BaseViewModel<PostsUiState>(PostsUiState()) {
 
     private var postsJob: Job? = null
 
@@ -53,42 +44,40 @@ class PostsViewModel(
         Timber.d("getPosts")
         postsJob?.cancel()
 
-        postsJob = coroutine {
-            val posts = postRepository.getPosts()
-            val favoritePosts = postRepository.getFavoritePostsFromDb()
-            _uiState.update { state ->
-                state.copy(
-                    posts = posts,
-                    favoritePosts = favoritePosts,
-                    isRefreshing = false
-                )
-            }
-        }
-            .setExceptionMapper(exceptionMapper = exceptionMapper)
-            .onProgressChanged { progress ->
-                Timber.d("remote exception:${progress.exception}")
-                _uiState.update {
+        postsJob = launchCoroutine(
+            coroutineBlock = {
+                val posts = postUseCase.getPosts()
+                val favoritePosts = postUseCase.getFavoritePostsFromDb()
+                updateState { state ->
+                    state.copy(
+                        posts = posts,
+                        favoritePosts = favoritePosts,
+                        isRefreshing = false
+                    )
+                }
+            },
+            onException = {
+                Timber.e(it)
+            },
+            onProgressChanged = { progress ->
+                updateState {
                     it.updateProgressState(
                         progress = progress.inProgress,
                         exception = progress.exception
                     )
                 }
             }
-            .onException {
-                Timber.e(it)
-            }
-            .launch()
+        )
     }
 
     fun onDeletePost(postId: Long?) {
         postId.let {
             deletePostFromDb(it)
-            val updatedPosts = _uiState.value.posts?.toMutableList()
-            val updatedFavorites = _uiState.value.favoritePosts?.toMutableList()
+            val updatedPosts = uiState.value.posts?.toMutableList()
+            val updatedFavorites = uiState.value.favoritePosts?.toMutableList()
             updatedPosts?.removeIf { post -> post.id == it }
             updatedFavorites?.removeIf { post -> post.id == it }
-
-            _uiState.update { state ->
+            updateState { state ->
                 state.copy(
                     posts = updatedPosts,
                     favoritePosts = updatedFavorites
@@ -101,22 +90,30 @@ class PostsViewModel(
         Timber.d("deletePostFromDb")
         postsJob?.cancel()
 
-        postsJob = coroutine {
-            postRepository.deletePostFromDb(postId)
-        }.setExceptionMapper(exceptionMapper)
-            .onException {
+        postsJob = launchCoroutine(
+            coroutineBlock = {
+                postUseCase.deletePostFromDb(postId = postId)
+            },
+            onException = {
                 Timber.e(it)
+            },
+            onProgressChanged = {
+                updateState { state ->
+                    state.copy(
+                        exception = it.exception
+                    )
+                }
             }
-            .launch()
+        )
     }
 
     fun setSelectedPost(postId: Long?) {
         postId.let {
-            val selectedPost = _uiState.value.posts?.firstOrNull { post ->
+            val selectedPost = uiState.value.posts?.firstOrNull { post ->
                 post.id == it
             }
             Timber.d("selected post:$selectedPost")
-            _uiState.update { state ->
+            updateState { state ->
                 state.copy(
                     selectedPost = selectedPost
                 )
@@ -128,34 +125,33 @@ class PostsViewModel(
         Timber.d("getAdditionalPosts")
         postsJob?.cancel()
 
-        if (_uiState.value.isLoadingMorePosts) {
+        if (uiState.value.isLoadingMorePosts) {
             return
         }
 
-        postsJob = coroutine {
-            val additionalPosts =
-                postRepository.getAdditionalPosts(offset = _uiState.value.posts?.size)
-            _uiState.update {
-                it.copy(
-                    posts = additionalPosts,
-                    isRefreshing = false
-                )
-            }
-            Timber.d("post size:${_uiState.value.posts?.size}")
-        }
-            .setExceptionMapper(exceptionMapper = exceptionMapper)
-            .onProgressChanged { progress ->
-                _uiState.update {
-                    it.updateProgressState(
-                        isLoadingMorePosts = progress.inProgress,
+        postsJob = launchCoroutine(
+            coroutineBlock = {
+                val additionalPosts =
+                    postUseCase.getAdditionalPosts(offset = uiState.value.posts?.size)
+                updateState {
+                    it.copy(
+                        posts = additionalPosts,
+                        isRefreshing = false
+                    )
+                }
+            },
+            onException = {
+                Timber.e(it)
+            },
+            onProgressChanged = { progress ->
+                updateState { state ->
+                    state.updateProgressState(
+                        progress = progress.inProgress,
                         exception = progress.exception
                     )
                 }
             }
-            .onException {
-                Timber.e(it)
-            }
-            .launch()
+        )
     }
 
     fun toggleIsFavoritePost(postId: Long?) {
@@ -167,27 +163,35 @@ class PostsViewModel(
         Timber.d("setFavoritePostInDb")
         postsJob?.cancel()
         postId?.let { id ->
-            postsJob = coroutine {
-                with(_uiState.value) {
-                    val favoritePost = posts?.first { post -> post.id == id }
-                    postRepository.setFavoritePostInDb(favoritePost)
-                }
-            }.setExceptionMapper(exceptionMapper)
-                .onException {
+            postsJob = launchCoroutine(
+                coroutineBlock = {
+                    with(uiState.value) {
+                        val favoritePost = posts?.first { post -> post.id == id }
+                        postUseCase.setFavoritePostInDb(favoritePost)
+                    }
+                },
+                onException = {
                     Timber.e(it)
+                },
+                onProgressChanged = { progress ->
+                    updateState { state ->
+                        state.copy(
+                            exception = progress.exception
+                        )
+                    }
                 }
-                .launch()
+            )
         }
     }
 
     private fun filterFavoritePosts(): List<Post>? {
-        return _uiState.value.posts?.filter { post -> post.isFavorite }
+        return uiState.value.posts?.filter { post -> post.isFavorite }
     }
 
     private fun updateFavoritePosts(postId: Long?) {
         postId.let {
-            with(_uiState.value) {
-                _uiState.update { state ->
+            with(uiState.value) {
+                updateState { state ->
                     state.copy(
                         posts = posts?.map { post ->
                             if (post.id == it) {
@@ -200,7 +204,7 @@ class PostsViewModel(
                             ?: selectedPost,
                     )
                 }
-                _uiState.update { state ->
+                updateState { state ->
                     state.copy(
                         favoritePosts = filterFavoritePosts()
                     )
@@ -210,7 +214,7 @@ class PostsViewModel(
     }
 
     fun onRefresh() {
-        _uiState.update { it.copy(isRefreshing = true) }
+        updateState { it.copy(isRefreshing = true) }
         getPosts()
     }
 

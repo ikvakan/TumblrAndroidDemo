@@ -3,7 +3,7 @@ package com.ikvakan.tumblrdemo.presentation.navigation.drawer
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.runtime.Composable
-import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
+import com.ikvakan.tumblrdemo.presentation.Navigate
 
 @Composable
 fun AppDrawer(

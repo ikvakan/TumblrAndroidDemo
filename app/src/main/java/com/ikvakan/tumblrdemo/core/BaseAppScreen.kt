@@ -18,7 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
+import com.ikvakan.tumblrdemo.presentation.Navigate
 import com.ikvakan.tumblrdemo.presentation.screens.composables.AppConnectivityStatus
 import com.ikvakan.tumblrdemo.util.extensions.currentNetworkState
 import com.ikvakan.tumblrdemo.util.extensions.getErrorMessage
@@ -33,9 +33,9 @@ import java.lang.Exception
  * Monitors network state and collects the flow from the [BaseViewModel].
  */
 @Composable
-fun BaseAppScreen(
+fun <S> BaseAppScreen(
     modifier: Modifier = Modifier,
-    viewModel: BaseViewModel?,
+    viewModel: BaseViewModel<S>?,
     progress: Boolean = false,
     onNavigate: Navigate,
     coroutineScope: CoroutineScope,

@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.mock.MockData
 import com.ikvakan.tumblrdemo.domain.model.Post
-import com.ikvakan.tumblrdemo.presentation.navigation.Navigate
+import com.ikvakan.tumblrdemo.presentation.Navigate
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable
