@@ -59,4 +59,5 @@ abstract class BaseViewModel<S>(initialState: S) : ViewModel(), KoinComponent {
     val networkConnectivityFlow = networkConnectivityObserver.observe()
 
     abstract fun onConnectionRestored(isConnected: Boolean)
+
 }

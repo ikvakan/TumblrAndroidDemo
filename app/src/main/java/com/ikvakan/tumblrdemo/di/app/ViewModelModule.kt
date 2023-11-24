@@ -10,7 +10,6 @@ import org.koin.dsl.module
 val viewModelModule = module {
 
     viewModel {
-//        PostsViewModel(postUseCase = get(), exceptionMapper = get())
-        PostsViewModel(postUseCase = get())
+        PostsViewModel(postUseCase = get(), getPaginatedPostsUseCase = get())
     }
 }

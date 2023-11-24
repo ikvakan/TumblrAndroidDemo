@@ -9,15 +9,20 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.core.BaseAppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.drawer.AppDrawer
@@ -41,6 +46,8 @@ fun AppContent(
     postsViewModel: PostsViewModel = getViewModel()
 ) {
     val uiState by postsViewModel.uiState.collectAsStateWithLifecycle()
+  //  val postsFlow = uiState.postsFlow?.collectAsLazyPagingItems()
+    val postsFlow = postsViewModel.posts?.collectAsLazyPagingItems()
 
     val navController = rememberNavController()
     val onNavigate: Navigate = { screen ->
@@ -78,12 +85,22 @@ fun AppContent(
                 composable(
                     route = AppScreen.PostsScreen.route,
                 ) {
+                    var exception by remember { mutableStateOf<Exception?>(null) }
+                    LaunchedEffect(key1 = postsFlow?.loadState) {
+                        if (postsFlow?.loadState?.refresh is LoadState.Error) {
+                            exception =
+                                (postsFlow.loadState.refresh as LoadState.Error).error as Exception
+                        } else {
+                            exception = null
+                        }
+                    }
+
                     BaseAppScreen(
                         viewModel = postsViewModel,
-                        progress = uiState.progress,
+                        progress = postsFlow?.loadState?.refresh is LoadState.Loading,
                         onNavigate = onNavigate,
                         coroutineScope = coroutineScope,
-                        exception = uiState.exception,
+                        exception = exception,
                         topBar = {
                             AppTopBar(
                                 topBarTitle = stringResource(id = R.string.posts),
@@ -93,13 +110,18 @@ fun AppContent(
                         }
                     ) {
                         PostsScreen(
-                            posts = uiState.posts,
-                            isLoadingMorePosts = uiState.isLoadingMorePosts,
-                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
-                            isRefreshing = uiState.isRefreshing,
-                            onRefresh = { postsViewModel.onRefresh() },
-                            onLoadMoreItems = { postsViewModel.getAdditionalPosts() },
-                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
+                            // posts = uiState.posts,
+                            postsFlow = postsFlow,
+                            isLoadingMorePosts = postsFlow?.loadState?.append is LoadState.Loading,
+//                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            onFavoriteClick = { post -> postsViewModel.toggleIsFavoritePost(post) },
+//                            onFavoriteClick = {},
+                            isRefreshing = postsFlow?.loadState?.refresh is LoadState.Loading,
+                            onRefresh = {
+                                postsFlow?.refresh()
+                            },
+                            //   onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
+                            onDeletePost = { },
                             onNavigate = onNavigate
                         )
                     }
@@ -110,8 +132,8 @@ fun AppContent(
                 ) { backStackEntry ->
                     val postId =
                         AppScreen.PostDetailsScreen.getPostId(backStackEntry)?.toLongOrNull()
-                    postsViewModel.setSelectedPost(postId)
-
+//                    postsViewModel.setSelectedPost(postId)
+//
                     BaseAppScreen(
                         viewModel = postsViewModel,
                         onNavigate = onNavigate,
@@ -126,7 +148,8 @@ fun AppContent(
                     ) {
                         PostDetailsScreen(
                             post = uiState.selectedPost,
-                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            //     onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            onFavoriteClick = { },
                         )
                     }
                 }
@@ -144,9 +167,11 @@ fun AppContent(
                         }
                     ) {
                         FavoritesScreen(
-                            favoritePosts = uiState.favoritePosts,
-                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
-                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
+                            posts = uiState.favoritePosts,
+//                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+//                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
+                            onFavoriteClick = { },
+                            onDeletePost = { },
                             onNavigate = onNavigate
                         )
                     }

@@ -12,13 +12,16 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.ikvakan.tumblrdemo.R
+import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable
 fun FavoriteIconButton(
     modifier: Modifier = Modifier,
-    onFavoriteClick: (Long?) -> Unit,
+//    onFavoriteClick: (Long?) -> Unit,
+    onFavoriteClick: (Post?) -> Unit,
     isFavorite: Boolean,
+    post: Post,
     iconSize: Dp = dimensionResource(id = R.dimen.default_icon_size),
     postId: Long?
 ) {
@@ -28,7 +31,7 @@ fun FavoriteIconButton(
         Icons.Default.FavoriteBorder
     }
 
-    IconButton(onClick = { onFavoriteClick(postId) }) {
+    IconButton(onClick = { onFavoriteClick(post) }) {
         Icon(
             imageVector = favoriteIcon,
             contentDescription = null,
@@ -45,6 +48,7 @@ fun FavoriteIconButtonPreview() {
         FavoriteIconButton(
             onFavoriteClick = {},
             isFavorite = false,
+            post = Post(),
             postId = null
         )
     }

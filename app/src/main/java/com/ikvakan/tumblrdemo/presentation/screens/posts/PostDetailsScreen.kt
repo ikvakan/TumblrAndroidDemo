@@ -12,7 +12,8 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 @Composable
 fun PostDetailsScreen(
     post: Post?,
-    onFavoriteClick: (Long?) -> Unit,
+//    onFavoriteClick: (Long?) -> Unit,
+    onFavoriteClick: (Post?) -> Unit,
 ) {
     if (post != null) {
         DetailsScreenContent(

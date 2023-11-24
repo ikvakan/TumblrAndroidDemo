@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,22 +33,26 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 fun DetailsScreenContent(
     modifier: Modifier = Modifier,
     post: Post,
-    onFavoriteClick: (Long?) -> Unit,
+//    onFavoriteClick: (Long?) -> Unit,
+    onFavoriteClick: (Post?) -> Unit,
     imageSize: Dp = dimensionResource(id = R.dimen.large_image_size),
     iconSize: Dp = dimensionResource(id = R.dimen.large_icon_size)
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(state = rememberScrollState())
             .padding(dimensionResource(id = R.dimen.small_padding)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_padding))
     ) {
         FavoriteIconRow(
+//            onFavoriteClick = onFavoriteClick,
             onFavoriteClick = onFavoriteClick,
             isFavorite = post.isFavorite,
             iconSize = iconSize,
-            postId = post.id
+            post = post,
+            postId = post.postId
         )
         GlideImage(
             model = post.imageUrl,

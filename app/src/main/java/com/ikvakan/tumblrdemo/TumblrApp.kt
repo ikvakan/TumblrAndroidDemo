@@ -3,8 +3,9 @@ package com.ikvakan.tumblrdemo
 import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import com.ikvakan.tumblrdemo.di.app.mediatorModule
 import com.ikvakan.tumblrdemo.di.app.viewModelModule
-import com.ikvakan.tumblrdemo.di.domain.domainModule
+import com.ikvakan.tumblrdemo.di.domain.useCaseModule
 import com.ikvakan.tumblrdemo.di.exception.exceptionModule
 import com.ikvakan.tumblrdemo.di.local.databaseModule
 import com.ikvakan.tumblrdemo.di.local.localRepositoryModule
@@ -34,10 +35,11 @@ class TumblrApp : Application() {
                 remoteRepositoryModule,
                 localRepositoryModule,
                 viewModelModule,
-                domainModule,
+                useCaseModule,
                 exceptionModule,
                 connectivityModule,
-                databaseModule
+                databaseModule,
+                mediatorModule
             )
         }
     }

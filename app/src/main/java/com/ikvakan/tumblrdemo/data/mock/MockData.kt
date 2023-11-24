@@ -5,7 +5,7 @@ import com.ikvakan.tumblrdemo.domain.model.Post
 class MockData {
     val postEntities = List(size = 20) {
         Post(
-            id = it.toLong(),
+            postId = it.toLong(),
             blogTitle = "Marvel Blog $it",
             summary = "Lorem ipsum dolor sit amet. Eos libero dolores ut voluptatem rerum " +
                 "ut atque libero id obcaecati veniam aut facere rerum? " +
