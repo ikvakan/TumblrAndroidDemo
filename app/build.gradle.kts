@@ -89,15 +89,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-
-    // Paging
-//    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-//    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
-    implementation("androidx.paging:paging-runtime:3.2.1")
-    implementation("androidx.paging:paging-compose:3.2.1")
-    // Room - paging
-    implementation("androidx.room:room-paging:2.5.1")
-
+    paging()
     glide()
     compose()
     timber()

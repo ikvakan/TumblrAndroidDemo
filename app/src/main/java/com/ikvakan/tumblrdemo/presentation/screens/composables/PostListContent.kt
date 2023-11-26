@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.compose.LazyPagingItems
@@ -22,10 +22,8 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 @Composable
 fun PostListContent(
     modifier: Modifier = Modifier,
-    postsFlow: LazyPagingItems<Post>?,
-    // posts: List<Post>,
+    posts: LazyPagingItems<Post>?,
     isLoadingMorePosts: Boolean = false,
-//    onFavoriteClick: (postId: Long?) -> Unit,
     onFavoriteClick: (Post?) -> Unit,
     onDeletePost: (Long?) -> Unit,
     onNavigate: Navigate
@@ -36,12 +34,12 @@ fun PostListContent(
         modifier = modifier.padding(vertical = dimensionResource(id = R.dimen.small_padding)),
         state = lazyListState,
         content = {
-            if (postsFlow != null) {
+            if (posts != null) {
                 items(
-                    count = postsFlow.itemCount,
-                    key = postsFlow.itemKey { it.postId!! }
+                    count = posts.itemCount,
+                    key = posts.itemKey { it.postId!! }
                 ) { index ->
-                    val post = postsFlow[index]
+                    val post = posts[index]
                     if (post != null) {
                         AppCard(
                             post = post,
@@ -71,8 +69,7 @@ fun PostListContent(
 fun PostListContentPreview() {
     TumblrDemoTheme {
         PostListContent(
-            postsFlow = null,
-            // posts = MockData().postEntities,
+            posts = null,
             onFavoriteClick = {},
             onDeletePost = {},
             isLoadingMorePosts = false,

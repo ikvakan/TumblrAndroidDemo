@@ -1,7 +1,7 @@
 object DependencyVersions {
     const val OK_HTTP = "5.0.0-alpha.2"
     const val RETROFIT = "2.9.0"
-    const val ROOM = "2.5.0"
+    const val ROOM = "2.5.1"
     const val DETEKT = "1.23.1"
     const val NAVIGATION_COMPOSE = "2.7.3"
     const val KOIN = "3.4.0"
@@ -13,6 +13,6 @@ object DependencyVersions {
     const val MATERIAL_3 = "1.5.3"
     const val SWIPE_REFRESH = "0.33.2-alpha"
     const val PAGING_RUNTIME = "3.2.1"
-    const val PAGING_COMPOSE = "3.3.0-alpha02"
+    const val PAGING_COMPOSE = "3.2.1"
 
 }

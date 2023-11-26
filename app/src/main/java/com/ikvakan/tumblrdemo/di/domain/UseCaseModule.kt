@@ -8,7 +8,6 @@ import org.koin.dsl.module
 val useCaseModule = module {
     single<PostUseCase> {
         PostUseCaseImpl(
-            remoteDataSource = get(),
             localDataSource = get()
         )
     }

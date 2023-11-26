@@ -9,12 +9,8 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -33,6 +29,7 @@ import com.ikvakan.tumblrdemo.presentation.screens.posts.PostDetailsScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostsScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostsViewModel
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
+import com.ikvakan.tumblrdemo.util.extensions.getException
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
@@ -46,8 +43,7 @@ fun AppContent(
     postsViewModel: PostsViewModel = getViewModel()
 ) {
     val uiState by postsViewModel.uiState.collectAsStateWithLifecycle()
-  //  val postsFlow = uiState.postsFlow?.collectAsLazyPagingItems()
-    val postsFlow = postsViewModel.posts?.collectAsLazyPagingItems()
+    val posts = uiState.postsFlow?.collectAsLazyPagingItems()
 
     val navController = rememberNavController()
     val onNavigate: Navigate = { screen ->
@@ -85,22 +81,12 @@ fun AppContent(
                 composable(
                     route = AppScreen.PostsScreen.route,
                 ) {
-                    var exception by remember { mutableStateOf<Exception?>(null) }
-                    LaunchedEffect(key1 = postsFlow?.loadState) {
-                        if (postsFlow?.loadState?.refresh is LoadState.Error) {
-                            exception =
-                                (postsFlow.loadState.refresh as LoadState.Error).error as Exception
-                        } else {
-                            exception = null
-                        }
-                    }
-
                     BaseAppScreen(
                         viewModel = postsViewModel,
-                        progress = postsFlow?.loadState?.refresh is LoadState.Loading,
+                        progress = posts?.loadState?.refresh is LoadState.Loading,
                         onNavigate = onNavigate,
                         coroutineScope = coroutineScope,
-                        exception = exception,
+                        exception = posts.getException(),
                         topBar = {
                             AppTopBar(
                                 topBarTitle = stringResource(id = R.string.posts),
@@ -110,18 +96,15 @@ fun AppContent(
                         }
                     ) {
                         PostsScreen(
-                            // posts = uiState.posts,
-                            postsFlow = postsFlow,
-                            isLoadingMorePosts = postsFlow?.loadState?.append is LoadState.Loading,
-//                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            posts = posts,
+                            isLoadingMorePosts = posts?.loadState?.append is LoadState.Loading,
                             onFavoriteClick = { post -> postsViewModel.toggleIsFavoritePost(post) },
-//                            onFavoriteClick = {},
-                            isRefreshing = postsFlow?.loadState?.refresh is LoadState.Loading,
+                            isRefreshing = uiState.isRefreshing,
                             onRefresh = {
-                                postsFlow?.refresh()
+                                posts?.refresh()
+                                postsViewModel.toggleIsRefreshing(posts?.loadState?.refresh is LoadState.Loading)
                             },
-                            //   onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
-                            onDeletePost = { },
+                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
                             onNavigate = onNavigate
                         )
                     }
@@ -132,11 +115,12 @@ fun AppContent(
                 ) { backStackEntry ->
                     val postId =
                         AppScreen.PostDetailsScreen.getPostId(backStackEntry)?.toLongOrNull()
-//                    postsViewModel.setSelectedPost(postId)
-//
+                    postsViewModel.setSelectedPost(postId)
+
                     BaseAppScreen(
                         viewModel = postsViewModel,
                         onNavigate = onNavigate,
+                        progress = uiState.progress,
                         coroutineScope = coroutineScope,
                         topBar = {
                             AppTopBar(
@@ -148,8 +132,7 @@ fun AppContent(
                     ) {
                         PostDetailsScreen(
                             post = uiState.selectedPost,
-                            //     onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
-                            onFavoriteClick = { },
+                            onFavoriteClick = { post -> postsViewModel.toggleIsFavoritePost(post) }
                         )
                     }
                 }
@@ -168,10 +151,8 @@ fun AppContent(
                     ) {
                         FavoritesScreen(
                             posts = uiState.favoritePosts,
-//                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
-//                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
-                            onFavoriteClick = { },
-                            onDeletePost = { },
+                            onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
+                            onFavoriteClick = { post -> postsViewModel.toggleIsFavoritePost(post) },
                             onNavigate = onNavigate
                         )
                     }

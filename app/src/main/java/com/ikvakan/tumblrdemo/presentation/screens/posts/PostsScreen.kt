@@ -18,9 +18,7 @@ import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable
 fun PostsScreen(
-    postsFlow: LazyPagingItems<Post>?,
-    // posts: List<Post>?,
-//    onFavoriteClick: (postId: Long?) -> Unit,
+    posts: LazyPagingItems<Post>?,
     onFavoriteClick: (Post?) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
@@ -42,9 +40,7 @@ fun PostsScreen(
         },
         content = {
             PostListContent(
-                postsFlow = postsFlow,
-                // posts = posts,
-//                onFavoriteClick = onFavoriteClick,
+                posts = posts,
                 onFavoriteClick = onFavoriteClick,
                 isLoadingMorePosts = isLoadingMorePosts,
                 onDeletePost = onDeletePost,
@@ -59,8 +55,7 @@ fun PostsScreen(
 fun PostsScreenPreview() {
     TumblrDemoTheme {
         PostsScreen(
-            postsFlow = null,
-            // posts = MockData().postEntities,
+            posts = null,
             onNavigate = {},
             isRefreshing = false,
             onRefresh = {},

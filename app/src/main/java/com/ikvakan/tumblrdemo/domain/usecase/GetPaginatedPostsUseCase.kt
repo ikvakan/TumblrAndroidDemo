@@ -9,7 +9,11 @@ import com.ikvakan.tumblrdemo.data.mapper.toDomain
 import com.ikvakan.tumblrdemo.domain.model.Post
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import timber.log.Timber
 
 class GetPaginatedPostsUseCase(
     private val postsPager: Pager<Int, PostEntity>
@@ -17,7 +21,11 @@ class GetPaginatedPostsUseCase(
     operator fun invoke(scope: CoroutineScope): Flow<PagingData<Post>> =
         postsPager.flow.map { pagingData ->
             pagingData.map { it.toDomain() }
-        }.cachedIn(scope)
-
-
+        }
+            .onStart { Timber.d("monitorPostsFlow - started") }
+            .onCompletion {
+                Timber.d("monitorPostsFlow - completed")
+            }.catch {
+                Timber.e(it)
+            }.cachedIn(scope)
 }
