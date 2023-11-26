@@ -5,19 +5,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ikvakan.tumblrdemo.data.mock.MockData
 import com.ikvakan.tumblrdemo.domain.model.Post
 import com.ikvakan.tumblrdemo.presentation.Navigate
-import com.ikvakan.tumblrdemo.presentation.screens.composables.PostListContent
+import com.ikvakan.tumblrdemo.presentation.screens.composables.FavoriteListContent
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
 
 @Composable
 fun FavoritesScreen(
-    favoritePosts: List<Post>?,
-    onFavoriteClick: (Long?) -> Unit,
+    posts: List<Post>?,
+    onFavoriteClick: (Post?) -> Unit,
     onDeletePost: (Long?) -> Unit,
     onNavigate: Navigate
 ) {
-    if (favoritePosts != null) {
-        PostListContent(
-            posts = favoritePosts,
+    if (posts != null) {
+        FavoriteListContent(
+            posts = posts,
             onFavoriteClick = onFavoriteClick,
             onDeletePost = onDeletePost,
             onNavigate = onNavigate
@@ -30,7 +30,7 @@ fun FavoritesScreen(
 fun FavoritesScreenPreview() {
     TumblrDemoTheme {
         FavoritesScreen(
-            favoritePosts = MockData().postEntities,
+            posts = MockData().postEntities,
             onFavoriteClick = {},
             onDeletePost = {},
             onNavigate = {}

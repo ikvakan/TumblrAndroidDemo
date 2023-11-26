@@ -1,7 +1,7 @@
 package com.ikvakan.tumblrdemo.domain.model
 
 data class Post(
-    val id: Long? = null,
+    val postId: Long? = null,
     val blogTitle: String = "",
     val summary: String = "",
     val imageUrl: String = "",

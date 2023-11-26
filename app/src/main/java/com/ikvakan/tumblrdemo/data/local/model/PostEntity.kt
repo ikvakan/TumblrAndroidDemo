@@ -4,9 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "posts")
-data class PostLocalDto(
-    @PrimaryKey(autoGenerate = false)
-    val id: Long? = null,
+data class PostEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val postId: Long? = null,
     val blogTitle: String = "",
     val summary: String = "",
     val imageUrl: String = "",

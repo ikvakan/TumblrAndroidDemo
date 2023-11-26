@@ -17,6 +17,7 @@ object Dependencies {
     const val ROOM_RUNTIME = "androidx.room:room-runtime:${DependencyVersions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${DependencyVersions.ROOM}"
     const val ROOM_KTX = "androidx.room:room-ktx:${DependencyVersions.ROOM}"
+    const val ROOM_PAGING = "androidx.room:room-paging:${DependencyVersions.ROOM}"
 
     const val DETEKT_FORMATTING =
         "io.gitlab.arturbosch.detekt:detekt-formatting:${DependencyVersions.DETEKT}"
@@ -85,6 +86,7 @@ fun DependencyHandler.navigation() {
 fun DependencyHandler.room() {
     implementation(Dependencies.ROOM_RUNTIME)
     implementation(Dependencies.ROOM_KTX)
+    implementation(Dependencies.ROOM_PAGING)
     kapt(Dependencies.ROOM_COMPILER)
 }
 

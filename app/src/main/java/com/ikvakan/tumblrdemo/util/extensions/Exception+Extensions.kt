@@ -4,7 +4,7 @@ import android.content.Context
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.data.exception.tumblr.TumblrException
 
-fun Exception.getErrorMessage(context: Context): String {
+fun Throwable.getErrorMessage(context: Context): String {
     return when (this) {
         is TumblrException.ClientException ->
             context.getString(R.string.error_client)

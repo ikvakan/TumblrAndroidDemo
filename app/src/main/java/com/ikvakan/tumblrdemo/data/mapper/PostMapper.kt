@@ -1,11 +1,11 @@
 package com.ikvakan.tumblrdemo.data.mapper
 
-import com.ikvakan.tumblrdemo.data.local.model.PostLocalDto
+import com.ikvakan.tumblrdemo.data.local.model.PostEntity
 import com.ikvakan.tumblrdemo.data.remote.model.ResponseRemoteDto
 import com.ikvakan.tumblrdemo.domain.model.Post
 
-fun Post.toLocalDto() = PostLocalDto(
-    id = this.id,
+fun Post.toEntity() = PostEntity(
+    postId = this.postId,
     blogTitle = this.blogTitle,
     summary = this.summary,
     imageUrl = this.imageUrl,
@@ -13,17 +13,17 @@ fun Post.toLocalDto() = PostLocalDto(
 )
 
 
-fun PostLocalDto.toEntity() = Post(
-    id = this.id,
+fun PostEntity.toDomain() = Post(
+    postId = this.postId,
     blogTitle = this.blogTitle,
     summary = this.summary,
     imageUrl = this.imageUrl,
     isFavorite = this.isFavorite
 )
 
-fun ResponseRemoteDto.toEntityList() = this.posts.map { e ->
+fun ResponseRemoteDto.toDomainList() = this.posts.map { e ->
     Post(
-        id = e.id,
+        postId = e.postId,
         blogTitle = this.blog?.title ?: "",
         summary = e.summary,
         imageUrl = e.photos.firstOrNull()?.image?.url ?: ""

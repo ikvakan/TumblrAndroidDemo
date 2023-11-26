@@ -31,7 +31,7 @@ class Coroutine(
         val exception: Exception? = null
     )
 
-    private lateinit var tumblrExceptionMapper: ExceptionMappers.Tumblr
+    private lateinit var exceptionMapper: ExceptionMappers.Tumblr
 
     private var progress = Progress()
     private var progressChangedCallback: ProgressChangedCallback? = null
@@ -47,7 +47,7 @@ class Coroutine(
 
     fun onException(callback: ((Exception) -> Unit)?) = apply { exceptionCallback = callback }
     fun setExceptionMapper(exceptionMapper: ExceptionMappers.Tumblr) =
-        apply { tumblrExceptionMapper = exceptionMapper }
+        apply { this.exceptionMapper = exceptionMapper }
 
     fun onStarted(callback: StartedCallBack) = apply { startedCallBack = callback }
     fun onCanceled(callback: CancelCallBack) = apply { cancelCallback = callback }
@@ -72,7 +72,7 @@ class Coroutine(
             exceptionCallback?.invoke(e)
             updateProgress(
                 inProgress = false,
-                exception = mapException(tumblrExceptionMapper, e)
+                exception = mapException(exceptionMapper, e)
             )
         }
     }

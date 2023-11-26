@@ -47,14 +47,15 @@ fun AppCard(
     post: Post,
     onNavigate: Navigate,
     onDeletePost: (Long?) -> Unit,
-    onFavoriteClick: (postId: Long?) -> Unit
+//    onFavoriteClick: (postId: Long?) -> Unit
+    onFavoriteClick: (Post?) -> Unit
 ) {
     var openDialog by remember { mutableStateOf(false) }
     Card(
         modifier = modifier
             .padding(dimensionResource(id = R.dimen.small_padding))
             .combinedClickable(
-                onClick = { onNavigate(AppScreen.PostDetailsScreen(postId = post.id.toString())) },
+                onClick = { onNavigate(AppScreen.PostDetailsScreen(postId = post.postId.toString())) },
                 onLongClick = {
                     openDialog = true
                 }
@@ -66,7 +67,7 @@ fun AppCard(
             AppAlertDialog(
                 onConfirm = {
                     openDialog = it
-                    onDeletePost(post.id)
+                    onDeletePost(post.postId)
                 },
                 onDismiss = { openDialog = it }
             )
@@ -104,9 +105,11 @@ fun AppCard(
                 )
             }
             FavoriteIconButton(
+//                onFavoriteClick = onFavoriteClick,
                 onFavoriteClick = onFavoriteClick,
                 isFavorite = post.isFavorite,
-                postId = post.id
+                post = post,
+                postId = post.postId
             )
         }
     }

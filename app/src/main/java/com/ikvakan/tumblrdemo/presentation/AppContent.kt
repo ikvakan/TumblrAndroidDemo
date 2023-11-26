@@ -13,11 +13,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ikvakan.tumblrdemo.R
 import com.ikvakan.tumblrdemo.core.BaseAppScreen
 import com.ikvakan.tumblrdemo.presentation.navigation.drawer.AppDrawer
@@ -28,6 +29,7 @@ import com.ikvakan.tumblrdemo.presentation.screens.posts.PostDetailsScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostsScreen
 import com.ikvakan.tumblrdemo.presentation.screens.posts.PostsViewModel
 import com.ikvakan.tumblrdemo.theme.TumblrDemoTheme
+import com.ikvakan.tumblrdemo.util.extensions.getException
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
@@ -46,6 +48,7 @@ fun AppContent(
     postsViewModel: PostsViewModel = getViewModel()
 ) {
     val uiState by postsViewModel.uiState.collectAsStateWithLifecycle()
+    val posts = uiState.postsFlow?.collectAsLazyPagingItems()
 
     val navController = rememberNavController()
     val onNavigate: Navigate = { screen ->
@@ -85,10 +88,10 @@ fun AppContent(
                 ) {
                     BaseAppScreen(
                         viewModel = postsViewModel,
-                        progress = uiState.progress,
+                        progress = posts?.loadState?.refresh is LoadState.Loading,
                         onNavigate = onNavigate,
                         coroutineScope = coroutineScope,
-                        exception = uiState.exception,
+                        exception = posts.getException(),
                         topBar = {
                             AppTopBar(
                                 topBarTitle = stringResource(id = R.string.posts),
@@ -98,12 +101,14 @@ fun AppContent(
                         }
                     ) {
                         PostsScreen(
-                            posts = uiState.posts,
-                            isLoadingMorePosts = uiState.isLoadingMorePosts,
-                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            posts = posts,
+                            isLoadingMorePosts = posts?.loadState?.append is LoadState.Loading,
+                            onFavoriteClick = { post -> postsViewModel.toggleIsFavoritePost(post) },
                             isRefreshing = uiState.isRefreshing,
-                            onRefresh = { postsViewModel.onRefresh() },
-                            onLoadMoreItems = { postsViewModel.getAdditionalPosts() },
+                            onRefresh = {
+                                posts?.refresh()
+                                postsViewModel.toggleIsRefreshing(posts?.loadState?.refresh is LoadState.Loading)
+                            },
                             onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
                             onNavigate = onNavigate
                         )
@@ -120,6 +125,7 @@ fun AppContent(
                     BaseAppScreen(
                         viewModel = postsViewModel,
                         onNavigate = onNavigate,
+                        progress = uiState.progress,
                         coroutineScope = coroutineScope,
                         topBar = {
                             AppTopBar(
@@ -131,7 +137,7 @@ fun AppContent(
                     ) {
                         PostDetailsScreen(
                             post = uiState.selectedPost,
-                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            onFavoriteClick = { post -> postsViewModel.toggleIsFavoritePost(post) }
                         )
                     }
                 }
@@ -149,9 +155,9 @@ fun AppContent(
                         }
                     ) {
                         FavoritesScreen(
-                            favoritePosts = uiState.favoritePosts,
-                            onFavoriteClick = { postId -> postsViewModel.toggleIsFavoritePost(postId) },
+                            posts = uiState.favoritePosts,
                             onDeletePost = { postId -> postsViewModel.onDeletePost(postId) },
+                            onFavoriteClick = { post -> postsViewModel.toggleIsFavoritePost(post) },
                             onNavigate = onNavigate
                         )
                     }
