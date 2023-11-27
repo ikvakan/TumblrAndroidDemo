@@ -26,6 +26,9 @@ A sample app that utilizes [Clean Architecture](https://developer.android.com/to
 
 ## Persistence
 * [Room](https://developer.android.com/jetpack/androidx/releases/room) - Room persistence library
+
+## Pagination
+* [Remote Mediator](https://developer.android.com/reference/kotlin/androidx/paging/RemoteMediator)
   
 ## Other
 ### Design
