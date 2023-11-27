@@ -21,8 +21,6 @@ interface PostDao {
     @Query("SELECT * FROM posts")
     fun getPaginatedPosts(): PagingSource<Int, PostEntity>
 
-//    @Query("SELECT * FROM posts WHERE isFavorite =1")
-//    suspend fun getFavoritePosts(): List<PostEntity>
     @Query("SELECT * FROM posts WHERE isFavorite =1")
     fun getFavoritePosts(): Flow<List<PostEntity>>
 

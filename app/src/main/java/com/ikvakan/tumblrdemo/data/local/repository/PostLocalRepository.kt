@@ -25,9 +25,11 @@ class PostLocalRepositoryImpl(private val postDao: PostDao) : PostLocalRepositor
     override suspend fun upsertPost(post: Post) = postDao.upsertPost(post.toEntity())
     override suspend fun upsertPosts(posts: List<Post>) =
         postDao.upsertPosts(posts.map { it.toEntity() })
+
     override suspend fun getPosts(): List<Post> = postDao.getPosts().map { it.toDomain() }
     override fun getFavoritePosts(): Flow<List<Post>> =
         postDao.getFavoritePosts().map { it.map { post -> post.toDomain() } }
+
     override suspend fun deletePost(postId: Long?) = postDao.deletePost(postId)
     override fun getPaginatedPosts(): PagingSource<Int, PostEntity> = postDao.getPaginatedPosts()
     override suspend fun setFavoritePost(postId: Long?, isFavorite: Boolean) =
@@ -35,6 +37,7 @@ class PostLocalRepositoryImpl(private val postDao: PostDao) : PostLocalRepositor
             postId,
             isFavorite
         )
+
     override suspend fun getSelectedPost(postId: Long?): Post =
         postDao.getSelectedPost(postId = postId).toDomain()
 }

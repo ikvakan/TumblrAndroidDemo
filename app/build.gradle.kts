@@ -9,30 +9,34 @@ plugins {
 }
 
 android {
-    namespace = "com.ikvakan.tumblrdemo"
-    compileSdk = 34
+    namespace = AppConfig.NAMESPACE
+    compileSdk = AppConfig.COMPILE_SDK
 
     buildFeatures {
         buildConfig = true
     }
 
     defaultConfig {
-        applicationId = "com.ikvakan.tumblrdemo"
-        minSdk = 26
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = AppConfig.APPLICATION_ID
+        minSdk = AppConfig.MIN_SDK
+        targetSdk = AppConfig.TAGRGET_SDK
+        versionCode = AppConfig.VERSION_CODE
+        versionName = AppConfig.VERSION_NAME
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("boolean", "LOGS", "true")
-        buildConfigField("String", "APP_DATABASE", "\"app_database\"")
-        buildConfigField("String", "API_BASE_URL", "\"https://api.tumblr.com/v2/\"")
+        buildConfigField(BuildConfig.Type.BOOLEAN, BuildConfig.Name.LOGS, "true")
+        buildConfigField(BuildConfig.Type.STRING, BuildConfig.Name.APP_DATABASE, "\"app_database\"")
         buildConfigField(
-            "String",
-            "API_KEY",
+            BuildConfig.Type.STRING,
+            BuildConfig.Name.API_BASE_URL,
+            "\"https://api.tumblr.com/v2/\""
+        )
+        buildConfigField(
+            BuildConfig.Type.STRING,
+            BuildConfig.Name.API_KEY,
             "\"${getProperty("local.properties", "api_key") ?: ""}\""
         )
     }
@@ -44,10 +48,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            var removeLogs = true
-            if (removeLogs) {
-                buildConfigField("boolean", "LOGS", "false")
-            }
+            buildConfigField(BuildConfig.Type.BOOLEAN, BuildConfig.Name.LOGS, "false")
         }
     }
     compileOptions {
@@ -55,13 +56,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = AppConfig.JVM_TARGET
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = AppConfig.KOTLIN_COMPILER_EXTENSION_VERSION
     }
     packaging {
         resources {
@@ -69,7 +70,7 @@ android {
         }
     }
     detekt {
-        toolVersion = "1.23.1"
+        toolVersion = AppConfig.DETEKT_TOOL_VERSION
         config.setFrom(files("${rootProject.projectDir}/config/detekt/detekt.yml"))
         buildUponDefaultConfig = true
         autoCorrect = true

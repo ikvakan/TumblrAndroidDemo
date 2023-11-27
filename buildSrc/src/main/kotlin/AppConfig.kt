@@ -8,6 +8,7 @@ object AppConfig {
     const val VERSION_NAME = "1.0"
     const val JVM_TARGET = "17"
     const val KOTLIN_COMPILER_EXTENSION_VERSION = "1.4.3"
+    const val DETEKT_TOOL_VERSION = "1.23.1"
 }
 
 object BuildConfig {
